@@ -1,0 +1,46 @@
+:root {
+  /* ألوان الوضع الداكن (افتراضي) */
+  --neon-gold: #ffc107;
+  --neon-green: #39ff14;
+  --alert-red: #ff3e3e;
+  --pure-white: #ffffff;
+  --bg-black: #050505;
+  
+  --gold: #ffc107;
+  --gold-light: #ffd633;
+  --gold-dark: #cc9a00;
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-muted: #a0a0a0;
+  --bg-primary: #050505;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #111111;
+  --border: #333333;
+  --border-gold: rgba(255, 193, 7, 0.3);
+  --success: #39ff14;
+  --danger: #ff3e3e;
+  --warning: #ffc107;
+}
+
+[data-theme="light"] {
+  --neon-gold: #f5a623;
+  --neon-green: #28a745;
+  --alert-red: #dc3545;
+  --pure-white: #000000;
+  --bg-black: #f8f9fa;
+  
+  --gold: #f5a623;
+  --gold-light: #ffc107;
+  --gold-dark: #d4891a;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #6c757d;
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e9ecef;
+  --border: #dee2e6;
+  --border-gold: rgba(245, 166, 35, 0.3);
+  --success: #28a745;
+  --danger: #dc3545;
+  --warning: #ffc107;
+}

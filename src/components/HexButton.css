@@ -1,0 +1,29 @@
+.hex-btn {
+  font-weight: bold;
+  padding: 12px 28px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  clip-path: polygon(8% 0%, 92% 0%, 100% 30%, 100% 70%, 92% 100%, 8% 100%, 0% 70%, 0% 30%);
+}
+
+.hex-btn-primary {
+  background: var(--gold);
+  color: #000;
+}
+
+.hex-btn-primary:hover {
+  background: var(--gold-light);
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(245, 166, 35, 0.5);
+}
+
+.hex-btn-secondary {
+  background: transparent;
+  color: var(--gold);
+  border: 2px solid var(--gold);
+}
+
+.hex-btn-secondary:hover {
+  background: rgba(245, 166, 35, 0.1);
+}

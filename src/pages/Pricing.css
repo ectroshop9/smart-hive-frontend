@@ -1,0 +1,24 @@
+.page-container { min-height: 100vh; padding: 100px 0; }
+.page-header { text-align: center; margin-bottom: 50px; }
+.page-header h1 { font-size: 3.5rem; margin-bottom: 10px; }
+.page-subtitle { color: var(--text-secondary); font-size: 1.2rem; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 60px; }
+.pricing-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 40px 30px; text-align: center; position: relative; transition: all 0.3s; }
+.pricing-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+.pricing-card.popular { border-color: var(--gold); transform: scale(1.05); }
+.popular-badge { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; padding: 8px 20px; border-radius: 30px; font-weight: bold; font-size: 14px; }
+.pricing-card h2 { font-size: 2rem; margin-bottom: 10px; }
+.plan-description { color: var(--text-secondary); margin-bottom: 25px; }
+.plan-price { margin-bottom: 30px; }
+.currency { font-size: 1.5rem; color: var(--text-secondary); }
+.amount { font-size: 4rem; font-weight: 800; color: var(--gold); }
+.plan-features { list-style: none; margin-bottom: 30px; text-align: right; }
+.plan-features li { padding: 10px 0; color: var(--text-primary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+.plan-features li:last-child { border-bottom: none; }
+.plan-features i { color: var(--gold); }
+.btn-plan { width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: all 0.3s; }
+.btn-outline-gold { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+.btn-outline-gold:hover { background: rgba(245, 166, 35, 0.1); }
+.money-back { display: flex; align-items: center; justify-content: center; gap: 15px; padding: 30px; background: var(--bg-secondary); border: 1px solid var(--border-gold); border-radius: 16px; color: var(--text-secondary); }
+.money-back i { font-size: 30px; color: var(--gold); }
+@media (max-width: 992px) { .pricing-grid { grid-template-columns: 1fr; } .pricing-card.popular { transform: scale(1); } }

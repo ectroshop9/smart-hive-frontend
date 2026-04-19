@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background-color: var(--bg-black);
+  color: var(--pure-white);
+  direction: rtl;
+  line-height: 1.6;
+  font-size: var(--text-base);
+  font-weight: 400;
+}
+
+/* تدرج هرمي للعناوين */
+h1 {
+  font-size: var(--text-5xl);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+  color: var(--pure-white);
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.5em;
+  color: var(--pure-white);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 0.5em;
+  color: var(--pure-white);
+}
+
+h4 {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 0.5em;
+  color: var(--pure-white);
+}
+
+/* النصوص */
+p {
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.7;
+  margin-bottom: 1em;
+  color: var(--text-secondary);
+}
+
+small, .text-small {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.text-large {
+  font-size: var(--text-lg);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-gold {
+  color: var(--neon-gold);
+}
+
+.text-white {
+  color: var(--pure-white);
+}
+
+/* الروابط */
+a {
+  color: var(--neon-gold);
+  text-decoration: none;
+  transition: color 0.3s;
+  font-weight: 500;
+}
+
+a:hover {
+  color: var(--gold-light);
+}
+
+/* أزرار */
+.btn-gold {
+  background: var(--neon-gold);
+  color: var(--bg-black);
+  font-weight: 700;
+  font-size: var(--text-base);
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-gold:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 193, 7, 0.4);
+  color: var(--bg-black);
+}
+
+/* حاويات */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* خلفية سداسيات */
+.hex-bg {
+  background-color: var(--bg-black);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15L30 0z' fill='none' stroke='%23ffc107' stroke-opacity='0.03' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+}
+
+/* تدرج نصي ذهبي */
+.text-gradient {
+  background: linear-gradient(135deg, var(--neon-gold) 0%, var(--gold-light) 50%, var(--neon-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* شريط تمرير */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-black); }
+::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-gold); }
+
+/* تباعد الصفحات */
+.page-container {
+  min-height: 100vh;
+  padding: 100px 0;
+}
+
+.page-title {
+  font-size: var(--text-4xl);
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page-subtitle {
+  font-size: var(--text-lg);
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+}
+
+/* تأثيرات حركية */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.page-container {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(255, 193, 7, 0.15);
+}
+
+.btn-gold {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-gold:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Skeleton Loader */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, #222 50%, var(--bg-tertiary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+.skeleton-text { height: 20px; margin: 10px 0; }
+.skeleton-title { height: 40px; width: 60%; margin: 20px 0; }
+.skeleton-image { height: 200px; width: 100%; border-radius: 12px; }
