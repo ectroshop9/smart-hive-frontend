@@ -1,10 +1,20 @@
+/* eslint-disable no-restricted-globals */
 const CACHE_NAME = 'smart-hive-v1';
-const urlsToCache = ['/', '/index.html', '/static/js/main.chunk.js', '/static/css/main.chunk.css'];
+const urlsToCache = ['/', '/index.html'];
 
+// @ts-ignore
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
+  // @ts-ignore
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
+  );
 });
 
+// @ts-ignore
 self.addEventListener('fetch', (event) => {
-  event.respondWith(caches.match(event.request).then((response) => response || fetch(event.request)));
+  // @ts-ignore
+  event.respondWith(
+    // @ts-ignore
+    caches.match(event.request).then((response) => response || fetch(event.request))
+  );
 });
