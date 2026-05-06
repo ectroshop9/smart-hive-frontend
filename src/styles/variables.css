@@ -1,5 +1,5 @@
 :root {
-  /* ألوان الوضع الداكن (افتراضي) */
+  /* ========== ألوان الموقع الأساسية (تبقى كما هي) ========== */
   --neon-gold: #ffc107;
   --neon-green: #39ff14;
   --alert-red: #ff3e3e;
@@ -20,6 +20,25 @@
   --success: #39ff14;
   --danger: #ff3e3e;
   --warning: #ffc107;
+  
+  /* ========== متغيرات IDX الجديدة ========== */
+  --idx-orange: #FF4D00;
+  --idx-red: #FF003D;
+  --idx-gold: #FFC107;
+  
+  /* ========== لون العناوين ========== */
+  --heading-color: #ffffff;
+  
+  /* ========== أحجام النصوص ========== */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
 }
 
 [data-theme="light"] {
@@ -43,4 +62,11 @@
   --success: #28a745;
   --danger: #dc3545;
   --warning: #ffc107;
+  
+  --idx-orange: #FF4D00;
+  --idx-red: #FF003D;
+  --idx-gold: #FFC107;
+  
+  /* ========== لون العناوين فاتح ========== */
+  --heading-color: #000000;
 }

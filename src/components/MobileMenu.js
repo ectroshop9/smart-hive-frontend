@@ -14,17 +14,17 @@ function MobileMenu({ isLoggedIn, userName, onLogout, scrollToContact }) {
       <div className={`mobile-menu ${isOpen ? 'open' : ''}`}>
         <Link to="/" onClick={() => setIsOpen(false)}>الرئيسية</Link>
         <Link to="/store" onClick={() => setIsOpen(false)}>المتجر</Link>
-        <Link to="/updates" onClick={() => setIsOpen(false)}>التحديثات</Link>
         <button className="mobile-link" onClick={() => { scrollToContact(); setIsOpen(false); }}>راسلنا</button>
         
         {!isLoggedIn ? (
           <>
-            <Link to="/activate" onClick={() => setIsOpen(false)} className="mobile-special">تفعيل</Link>
+            <Link to="/activate" onClick={() => setIsOpen(false)} className="mobile-special">تسجيل</Link>
             <Link to="/login" onClick={() => setIsOpen(false)}>دخول</Link>
           </>
         ) : (
           <>
             <Link to="/dashboard" onClick={() => setIsOpen(false)}>لوحة التحكم</Link>
+            <Link to="/dashboard/profile" onClick={() => setIsOpen(false)}>الملف الشخصي</Link>
             <button onClick={() => { onLogout(); setIsOpen(false); }} className="logout-btn">تسجيل الخروج</button>
           </>
         )}

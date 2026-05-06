@@ -6,11 +6,12 @@ function Sidebar({ userName, onLogout }) {
   const navigate = useNavigate();
 
   const menuItems = [
-    { path: '/dashboard', icon: 'tachometer-alt', label: 'لوحة التحكم' },
-    { path: '/dashboard/devices', icon: 'microchip', label: 'الأجهزة' },
-    { path: '/dashboard/readings', icon: 'chart-line', label: 'القراءات' },
+    { path: '/dashboard', icon: 'tachometer-alt', label: 'لوحة التحكم', end: true },
+    { path: '/dashboard/my-hive', icon: 'hive', label: 'منحلي' },
+    { path: '/dashboard/certificates', icon: 'certificate', label: 'شهادات المنشأ' },
+    { path: '/dashboard/my-devices', icon: 'microchip', label: 'أجهزتي' },
     { path: '/dashboard/alerts', icon: 'bell', label: 'التنبيهات' },
-    { path: '/dashboard/settings', icon: 'cog', label: 'الإعدادات' },
+    { path: '/dashboard/profile', icon: 'user-circle', label: 'حسابي' },
   ];
 
   return (
@@ -38,7 +39,7 @@ function Sidebar({ userName, onLogout }) {
             key={item.path} 
             to={item.path} 
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
-            end={item.path === '/dashboard'}
+            end={item.end}
           >
             <i className={`fas fa-${item.icon}`}></i>
             <span>{item.label}</span>

@@ -1,0 +1,170 @@
+.profile-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-card {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 20px;
+  padding: 40px;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.profile-header h1 {
+  font-size: 2rem;
+  margin: 20px 0 10px;
+  color: var(--heading-color);
+}
+
+.membership-info {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px;
+  background: var(--bg-tertiary);
+  border-radius: 20px;
+  margin-bottom: 30px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--heading-color);
+}
+
+.info-item i {
+  color: #FFC107;
+}
+
+.profile-form .form-group {
+  margin-bottom: 20px;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-save {
+  flex: 1;
+  padding: 14px;
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  color: #fff;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+  background: linear-gradient(135deg, #FFC107, #FF4D00);
+  border-color: #FFC107;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+}
+
+.btn-change-password {
+  flex: 1;
+  padding: 14px;
+  background: transparent;
+  color: #FFC107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-change-password:hover {
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  color: #fff;
+  border-color: #FFC107;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.password-modal {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 450px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  color: var(--heading-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.success-alert {
+  background: var(--neon-green);
+  color: var(--bg-black);
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.error-message {
+  color: var(--alert-red);
+  font-size: 0.85rem;
+  margin-top: 5px;
+  display: block;
+}
+
+.has-error input,
+.has-error textarea {
+  border-color: var(--alert-red) !important;
+}

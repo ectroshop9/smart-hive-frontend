@@ -1,100 +1,108 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { algeriaCities } from '../data/algeriaCities';
 import './ProductDetail.css';
 
 function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(0);
-
-  const products = {
-    1: { 
-      id: 1, 
-      name: 'حساس حرارة ورطوبة DHT22', 
-      price: 29, 
-      category: 'حساسات', 
-      description: 'حساس عالي الدقة لقياس درجة الحرارة والرطوبة.',
-      stock: 15,
-      rating: 4.7,
-      images: ['thermometer-half', 'temperature-high'],
-      features: ['دقة ±0.5°C', 'نطاق -40 إلى 80°C'],
-      specs: { 'نطاق الحرارة': '-40°C إلى 80°C', 'دقة الحرارة': '±0.5°C' }
-    },
-    2: { 
-      id: 2, 
-      name: 'حساس وزن HX711', 
-      price: 49, 
-      category: 'حساسات', 
-      description: 'مضخم إشارة لخلايا الوزن.',
-      stock: 8,
-      rating: 4.8,
-      images: ['weight-scale', 'balance-scale'],
-      features: ['دقة 24-bit', 'معدل تحديث 80Hz'],
-      specs: { 'الدقة': '24-bit', 'جهد التشغيل': '2.7V - 5.5V' }
-    },
-    4: { 
-      id: 4, 
-      name: 'لوحة ESP32-S3', 
-      price: 25, 
-      category: 'لوحات', 
-      description: 'لوحة تطوير ESP32-S3.',
-      stock: 12,
-      rating: 4.9,
-      images: ['microchip', 'wifi'],
-      features: ['WiFi 6', 'Bluetooth 5'],
-      specs: { 'المعالج': '240MHz', 'الذاكرة': '512KB SRAM' }
-    },
-  };
-
-  const product = products[id] || products[1];
-  const totalPrice = product.price * quantity;
-
   const [orderData, setOrderData] = useState({
-    fullName: '', phone: '', wilaya: '', commune: '', address: '', notes: ''
+    fullName: localStorage.getItem('lastFullName') || '',
+    phone: localStorage.getItem('lastPhone') || '',
+    wilayaId: '', commune: '', address: ''
   });
 
-  const wilayas = [
-    { id: 16, name: 'الجزائر', communes: ['الجزائر الوسطى', 'باب الوادي'] },
-    { id: 31, name: 'وهران', communes: ['وهران', 'السانية'] },
-  ];
+  const API_URL = process.env.REACT_APP_API_URL;
+  const user_id = localStorage.getItem('user_id') || 'BEEK-GUEST';
 
-  const [selectedWilaya, setSelectedWilaya] = useState(null);
-  const [availableCommunes, setAvailableCommunes] = useState([]);
+  useEffect(() => {
+    fetch(`${API_URL}/api/store/api/products/${id}/`)
+      .then(res => res.json())
+      .then(data => {
+        setProduct({
+          id: data.product_id,
+          name: data.name,
+          price: parseFloat(data.price),
+          description: data.description,
+          category: data.category,
+          stock: data.stock_quantity,
+          image: data.image_url || 'box'
+        });
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [id, API_URL]);
 
-  const handleWilayaChange = (wilayaId) => {
-    const wilaya = wilayas.find(w => w.id === parseInt(wilayaId));
-    setSelectedWilaya(wilaya);
-    setAvailableCommunes(wilaya ? wilaya.communes : []);
-    setOrderData({ ...orderData, wilaya: wilaya ? wilaya.name : '', commune: '' });
-  };
-
-  const nextStep = () => {
-    if (currentStep === 1 && orderData.fullName && orderData.phone) setCurrentStep(2);
-    else if (currentStep === 2 && orderData.wilaya && orderData.commune && orderData.address) setCurrentStep(3);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => navigate('/'), 3000);
+    
+    if (isSubmitting) return;
+    
+    const phoneRegex = /^(05|06|07)[0-9]{8}$/;
+    if (!phoneRegex.test(orderData.phone)) {
+      alert('رقم الهاتف غير صحيح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    const selectedWilaya = algeriaCities[orderData.wilayaId];
+    const shippingAddress = `${orderData.address || ''}, ${orderData.commune}, ${selectedWilaya?.name || ''}`;
+    
+    const orderPayload = {
+      full_name: orderData.fullName,
+      phone: orderData.phone,
+      user_id: user_id,
+      shipping_address: shippingAddress,
+      items: [{ product_id: product.id, quantity: quantity }]
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/api/store/api/orders/create/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitted(true);
+        setTimeout(() => navigate('/store'), 3000);
+      } else {
+        alert('فشل إنشاء الطلب: ' + JSON.stringify(data));
+      }
+    } catch (err) {
+      alert('فشل الاتصال: ' + err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const renderStars = (rating) => {
-    return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+  const updateField = (field, value) => {
+    setOrderData({ ...orderData, [field]: value });
+    if (field === 'fullName') localStorage.setItem('lastFullName', value);
+    if (field === 'phone') localStorage.setItem('lastPhone', value);
   };
+
+  if (loading) return <div className="page-container"><div className="container">جاري التحميل...</div></div>;
+  if (!product) return <div className="page-container"><div className="container">المنتج غير موجود</div></div>;
+
+  const totalPrice = product.price * quantity;
 
   if (submitted) {
     return (
-      <div className="page-container hex-bg">
+      <div className="page-container">
         <div className="container">
-          <div className="success-message">
+          <div className="success-card">
             <div className="success-icon"><i className="fas fa-check-circle"></i></div>
-            <h2 className="text-gradient">تم استلام طلبك بنجاح!</h2>
-            <p>شكراً {orderData.fullName} على طلبك</p>
+            <h2>تم استلام طلبك بنجاح!</h2>
+            <p>شكراً {orderData.fullName}، سنتواصل معك قريباً</p>
           </div>
         </div>
       </div>
@@ -108,103 +116,89 @@ function ProductDetail() {
           <i className="fas fa-arrow-right"></i> العودة للمتجر
         </button>
 
-        <div className="product-detail">
-          <div className="product-gallery">
-            <div className="main-image">
-              <i className={`fas fa-${product.images[selectedImage]}`}></i>
-            </div>
-            <div className="thumbnail-list">
-              {product.images.map((img, idx) => (
-                <div key={idx} className={`thumbnail ${selectedImage === idx ? 'active' : ''}`} onClick={() => setSelectedImage(idx)}>
-                  <i className={`fas fa-${img}`}></i>
-                </div>
-              ))}
+        <div className="product-detail-modern">
+          <div className="product-image-section">
+            <div className="product-main-image">
+              <i className={`fas fa-${product.image}`}></i>
             </div>
           </div>
 
-          <div className="product-info">
-            <div className="product-category">{product.category}</div>
-            <h1 className="text-gradient">{product.name}</h1>
-            <div className="product-rating">
-              <span className="stars">{renderStars(product.rating)}</span>
-              <span className="rating-value">{product.rating}</span>
+          <div className="product-info-section">
+            <div className="product-category-badge">{product.category}</div>
+            <h1 className="product-title">{product.name}</h1>
+            <p className="product-desc">{product.description}</p>
+            
+            <div className="product-price-box">
+              <span className="current-price">{product.price} دج</span>
+              <span className="stock-badge">✓ {product.stock} قطعة متوفرة</span>
             </div>
-            <div className="product-price-large">${product.price}</div>
-            <p className="product-description">{product.description}</p>
-            <div className="product-features">
-              {product.features.map((f, i) => <div key={i} className="feature-item"><i className="fas fa-check-circle"></i><span>{f}</span></div>)}
+
+            <div className="free-shipping-badge">
+              <i className="fas fa-truck"></i> شحن مجاني لجميع الولايات
             </div>
-            <div className="product-stock">
-              <i className="fas fa-check-circle"></i> {product.stock} قطعة متوفرة
-            </div>
-            {!showOrderForm && (
-              <div className="product-actions">
-                <div className="quantity-selector">
-                  <button onClick={() => quantity > 1 && setQuantity(quantity - 1)}>-</button>
+
+            <form onSubmit={handleSubmitOrder} className="compact-order-form">
+              <div className="form-row-compact">
+                <input type="text" placeholder="الاسم بالكامل" value={orderData.fullName} onChange={(e) => updateField('fullName', e.target.value)} required />
+                <input type="tel" placeholder="رقم الهاتف" value={orderData.phone} onChange={(e) => updateField('phone', e.target.value)} required />
+              </div>
+
+              <div className="form-row-compact">
+                <select value={orderData.wilayaId} onChange={(e) => setOrderData({...orderData, wilayaId: e.target.value, commune: ''})} required>
+                  <option value="">اختر الولاية</option>
+                  {Object.keys(algeriaCities).map(id => (
+                    <option key={id} value={id}>{id} - {algeriaCities[id].name}</option>
+                  ))}
+                </select>
+                <select 
+                  value={orderData.commune} 
+                  onChange={(e) => setOrderData({...orderData, commune: e.target.value})} 
+                  disabled={!orderData.wilayaId} 
+                  required
+                >
+                  <option value="">اختر البلدية</option>
+                  {orderData.wilayaId && algeriaCities[orderData.wilayaId].communes.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              <input type="text" placeholder="العنوان التفصيلي (اختياري)" value={orderData.address} onChange={(e) => setOrderData({...orderData, address: e.target.value})} />
+
+              <div className="quantity-row">
+                <span>الكمية:</span>
+                <div className="quantity-control">
+                  <button type="button" onClick={() => quantity > 1 && setQuantity(quantity - 1)}>−</button>
                   <span>{quantity}</span>
-                  <button onClick={() => quantity < product.stock && setQuantity(quantity + 1)}>+</button>
+                  <button type="button" onClick={() => quantity < product.stock && setQuantity(quantity + 1)}>+</button>
                 </div>
-                <button className="btn-buy-now" onClick={() => setShowOrderForm(true)}>
-                  <i className="fas fa-shopping-cart"></i> طلب الآن
-                </button>
               </div>
-            )}
-          </div>
-        </div>
 
-        {showOrderForm && (
-          <div className="order-form-section">
-            <h2 className="form-title text-gradient">إتمام الطلب</h2>
-            <div className="order-summary-bar">
-              <span><strong>{product.name}</strong> × {quantity}</span>
-              <span className="total-price">الإجمالي: ${totalPrice}</span>
-            </div>
-            <div className="step-progress">
-              <div className={`step ${currentStep >= 1 ? 'active' : ''}`}><span className="step-number">1</span><span className="step-label">المعلومات</span></div>
-              <div className={`step-line ${currentStep >= 2 ? 'active' : ''}`}></div>
-              <div className={`step ${currentStep >= 2 ? 'active' : ''}`}><span className="step-number">2</span><span className="step-label">العنوان</span></div>
-              <div className={`step-line ${currentStep >= 3 ? 'active' : ''}`}></div>
-              <div className={`step ${currentStep >= 3 ? 'active' : ''}`}><span className="step-number">3</span><span className="step-label">تأكيد</span></div>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              {currentStep === 1 && (
-                <div className="step-content">
-                  <div className="form-row">
-                    <div className="form-group"><label>الاسم الكامل *</label><input type="text" value={orderData.fullName} onChange={(e) => setOrderData({...orderData, fullName: e.target.value})} /></div>
-                    <div className="form-group"><label>رقم الهاتف *</label><input type="tel" value={orderData.phone} onChange={(e) => setOrderData({...orderData, phone: e.target.value})} /></div>
-                  </div>
+              <div className="invoice-box">
+                <div className="invoice-row">
+                  <span>سعر المنتج:</span>
+                  <span>{product.price * quantity} دج</span>
                 </div>
-              )}
-              {currentStep === 2 && (
-                <div className="step-content">
-                  <div className="form-row">
-                    <div className="form-group"><label>الولاية *</label><select value={selectedWilaya?.id || ''} onChange={(e) => handleWilayaChange(e.target.value)}><option value="">اختر الولاية</option>{wilayas.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}</select></div>
-                    <div className="form-group"><label>البلدية *</label><select value={orderData.commune} onChange={(e) => setOrderData({...orderData, commune: e.target.value})} disabled={!selectedWilaya}><option value="">اختر البلدية</option>{availableCommunes.map(c => <option key={c} value={c}>{c}</option>)}</select></div>
-                  </div>
-                  <div className="form-group"><label>العنوان التفصيلي *</label><textarea value={orderData.address} onChange={(e) => setOrderData({...orderData, address: e.target.value})} rows="2"></textarea></div>
+                <div className="invoice-row">
+                  <span>الشحن:</span>
+                  <span style={{ color: 'var(--neon-green)' }}>مجاني</span>
                 </div>
-              )}
-              {currentStep === 3 && (
-                <div className="step-content">
-                  <div className="order-review">
-                    <h4>مراجعة الطلب</h4>
-                    <div className="review-item"><span>المنتج:</span><strong>{product.name} × {quantity}</strong></div>
-                    <div className="review-item"><span>الإجمالي:</span><strong>${totalPrice}</strong></div>
-                    <div className="review-item"><span>الاسم:</span><strong>{orderData.fullName}</strong></div>
-                    <div className="review-item"><span>الهاتف:</span><strong>{orderData.phone}</strong></div>
-                  </div>
+                <div className="invoice-row total">
+                  <span>الإجمالي:</span>
+                  <strong>{totalPrice} دج</strong>
                 </div>
-              )}
-              <div className="payment-info"><i className="fas fa-hand-holding-usd"></i><span>الدفع عند الاستلام</span></div>
-              <div className="form-actions">
-                {currentStep > 1 && <button type="button" className="btn-secondary" onClick={() => setCurrentStep(currentStep - 1)}>السابق</button>}
-                <button type="button" className="btn-cancel" onClick={() => setShowOrderForm(false)}>إلغاء</button>
-                {currentStep < 3 ? <button type="button" className="btn-submit" onClick={nextStep}>التالي</button> : <button type="submit" className="btn-submit">تأكيد الطلب</button>}
               </div>
+
+              <button type="submit" className="btn-order-submit" disabled={isSubmitting}>
+                <i className="fas fa-shopping-cart"></i> {isSubmitting ? 'جاري الإرسال...' : 'طلب الآن'}
+              </button>
+
+              <p className="payment-note">
+                <i className="fas fa-hand-holding-usd"></i> الدفع عند الاستلام
+              </p>
             </form>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

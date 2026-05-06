@@ -1,0 +1,134 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  animation: fadeIn 0.3s ease;
+}
+
+.logout-modal {
+  background: var(--bg-secondary);
+  border: 2px solid var(--neon-gold);
+  border-radius: 30px;
+  padding: 40px;
+  max-width: 450px;
+  width: 90%;
+  text-align: center;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: var(--alert-red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-icon i {
+  font-size: 40px;
+  color: var(--pure-white);
+}
+
+.logout-modal h2 {
+  color: var(--neon-gold);
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.modal-body p {
+  color: var(--pure-white);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.user-name-highlight {
+  color: var(--neon-gold);
+  font-weight: bold;
+}
+
+.modal-note {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-cancel {
+  flex: 1;
+  padding: 14px;
+  background: transparent;
+  color: var(--pure-white);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+  border-color: var(--pure-white);
+}
+
+.btn-confirm {
+  flex: 1;
+  padding: 14px;
+  background: var(--alert-red);
+  color: var(--pure-white);
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.btn-confirm:hover {
+  background: #cc0000;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 576px) {
+  .logout-modal {
+    padding: 30px 20px;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+}

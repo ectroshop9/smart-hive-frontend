@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import MobileMenu from './MobileMenu';
 import ThemeToggle from './ThemeToggle';
+import LogoutModal from './LogoutModal';
+import { getSecureItem, removeSecureItem } from '../utils/encrypt';
 import './Header.css';
 
 function Header() {
@@ -10,13 +12,14 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const dropdownRef = useRef(null);
   
   const isActive = (path) => location.pathname === path ? 'active' : '';
   
   useEffect(() => {
-    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const name = localStorage.getItem('userName') || '';
+    const loggedIn = getSecureItem('isLoggedIn') === 'true';
+    const name = getSecureItem('userName') || '';
     setIsLoggedIn(loggedIn);
     setUserName(name);
   }, [location.pathname]);
@@ -31,12 +34,23 @@ function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userName');
-    setIsLoggedIn(false);
+  const handleLogoutClick = () => {
     setDropdownOpen(false);
+    setShowLogoutModal(true);
+  };
+
+  const handleLogoutConfirm = () => {
+    removeSecureItem('isLoggedIn');
+    removeSecureItem('userName');
+    removeSecureItem('authToken');
+    removeSecureItem('userId');
+    setIsLoggedIn(false);
+    setShowLogoutModal(false);
     navigate('/');
+  };
+
+  const handleLogoutCancel = () => {
+    setShowLogoutModal(false);
   };
 
   const scrollToContact = () => {
@@ -52,22 +66,20 @@ function Header() {
     <header className="header">
       <div className="container header-container">
         <Link to="/" className="logo">
-          <span className="logo-icon">🐝</span>
-          <span className="logo-text">SMART HIVE</span>
+          <span className="logo-text">SmartHiveDZ</span>
         </Link>
         
         <nav className="nav-menu">
           <Link to="/" className={`nav-link ${isActive('/')}`}>الرئيسية</Link>
           <Link to="/store" className={`nav-link ${isActive('/store')}`}>المتجر</Link>
-          <Link to="/updates" className={`nav-link ${isActive('/updates')}`}>التحديثات</Link>
-          <button className="nav-link" onClick={scrollToContact}>راسلنا</button>
+          <Link to="/smart-hive-os" className={`nav-link ${isActive('/smart-hive-os')}`}>نظام التشغيل</Link>
         </nav>
         
         <div className="header-actions">
           <ThemeToggle />
           {!isLoggedIn ? (
             <>
-              <Link to="/activate" className="btn-activate"><i className="fas fa-key"></i><span>تفعيل</span></Link>
+              <Link to="/activate" className="btn-activate"><i className="fas fa-key"></i><span>تسجيل</span></Link>
               <Link to="/login" className="btn-login"><i className="fas fa-user"></i></Link>
             </>
           ) : (
@@ -79,17 +91,30 @@ function Header() {
               </button>
               {dropdownOpen && (
                 <div className="user-dropdown">
-                  <Link to="/dashboard" onClick={() => setDropdownOpen(false)}>لوحة التحكم</Link>
-                  <Link to="/profile" onClick={() => setDropdownOpen(false)}>الملف الشخصي</Link>
-                  <button onClick={handleLogout}>تسجيل الخروج</button>
+                  <Link to="/dashboard" onClick={() => setDropdownOpen(false)}>
+                    <i className="fas fa-tachometer-alt"></i> لوحة التحكم
+                  </Link>
+                  <Link to="/dashboard/profile" onClick={() => setDropdownOpen(false)}>
+                    <i className="fas fa-user-circle"></i> الملف الشخصي
+                  </Link>
+                  <button onClick={handleLogoutClick}>
+                    <i className="fas fa-sign-out-alt"></i> تسجيل الخروج
+                  </button>
                 </div>
               )}
             </div>
           )}
         </div>
 
-        <MobileMenu isLoggedIn={isLoggedIn} userName={userName} onLogout={handleLogout} scrollToContact={scrollToContact} />
+        <MobileMenu isLoggedIn={isLoggedIn} userName={userName} onLogout={handleLogoutClick} scrollToContact={scrollToContact} />
       </div>
+      
+      <LogoutModal 
+        isOpen={showLogoutModal}
+        onClose={handleLogoutCancel}
+        onConfirm={handleLogoutConfirm}
+        userName={userName}
+      />
     </header>
   );
 }

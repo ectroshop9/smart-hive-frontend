@@ -10,7 +10,7 @@
 
 .login-card {
   background: var(--bg-secondary);
-  border: 1px solid var(--border-gold);
+  border: 1px solid rgba(255, 193, 7, 0.3);
   border-radius: 16px;
   padding: 40px;
 }
@@ -23,7 +23,7 @@
 .hex-icon-large {
   width: 80px;
   height: 80px;
-  background: var(--neon-gold);
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,17 +33,17 @@
 
 .hex-icon-large i {
   font-size: 36px;
-  color: var(--bg-black);
+  color: #fff;
 }
 
 .login-header h1 {
   font-size: 2rem;
   margin-bottom: 10px;
+  color: var(--heading-color);
 }
 
 .login-header p {
-  color: var(--pure-white);
-  opacity: 0.9;
+  color: var(--text-secondary);
 }
 
 .login-form {
@@ -59,27 +59,33 @@
 }
 
 .form-group label {
-  color: var(--neon-gold);
-  font-weight: 500;
+  color: #FFC107;
+  font-weight: 600;
+  font-size: var(--text-sm);
 }
 
 .form-group label i {
-  color: var(--neon-gold);
+  color: #FFC107;
   margin-left: 8px;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea,
+.form-group select {
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px 15px;
-  color: var(--pure-white);
+  color: var(--heading-color);
   font-family: inherit;
+  font-size: var(--text-base);
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
   outline: none;
-  border-color: var(--neon-gold);
+  border-color: #FFC107;
   box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
 }
 
@@ -94,56 +100,64 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  color: var(--pure-white);
+  color: var(--heading-color);
 }
 
 .checkbox-label input {
-  accent-color: var(--neon-gold);
+  accent-color: #FFC107;
 }
 
 .forgot-link {
-  color: var(--neon-gold);
+  color: #FFC107;
   font-size: 14px;
 }
 
-.btn-login-submit {
-  background: var(--neon-gold);
-  color: var(--bg-black);
-  font-weight: bold;
+.btn-login-submit,
+.btn-activate-submit {
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  color: #fff;
+  font-weight: 700;
   padding: 14px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 14px;
+  font-size: var(--text-base);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   margin-top: 10px;
+  transition: all 0.3s ease;
 }
 
-.btn-login-submit:hover {
-  background: var(--gold-light);
+.btn-login-submit:hover,
+.btn-activate-submit:hover {
+  background: linear-gradient(135deg, #FFC107, #FF4D00);
+  border-color: #FFC107;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+  transform: translateX(-3px);
 }
 
 .btn-demo-login {
   background: transparent;
-  color: var(--neon-gold);
-  border: 2px dashed var(--neon-gold);
-  font-weight: bold;
+  color: #FFC107;
+  border: 2px dashed rgba(255, 193, 7, 0.3);
+  font-weight: 700;
   padding: 14px;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: 14px;
+  font-size: var(--text-base);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   margin-top: 10px;
+  transition: all 0.3s ease;
 }
 
 .btn-demo-login:hover {
-  background: rgba(0, 212, 255, 0.1);
+  background: rgba(255, 193, 7, 0.1);
+  border-color: #FFC107;
 }
 
 .login-footer {
@@ -154,23 +168,6 @@
 }
 
 .login-footer a {
-  color: var(--neon-gold);
+  color: #FFC107;
   font-weight: bold;
-}
-.form-group label {
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-  font-size: var(--text-base);
-}
-
-.btn-login-submit,
-.btn-activate-submit,
-.btn-demo-login {
-  font-size: var(--text-base);
-  font-weight: 700;
 }

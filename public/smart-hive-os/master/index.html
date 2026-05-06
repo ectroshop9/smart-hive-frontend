@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Smart Hive OS</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/hives.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/expert-bot.js"></script>
+    <script src="js/wizard.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/windows.js"></script>
+    <script src="js/wallpaper.js"></script>
+    <script src="js/taskbar.js"></script>
+    <script src="js/context-menu.js"></script>
+    <script src="js/desktop.js"></script>
+    
+    <!-- الملفات الجديدة للأيقونات -->
+    <script src="js/hive-selector.js"></script>
+    <script src="js/hive-health.js"></script>
+    <script src="js/hive-stats.js"></script>
+    <script src="js/hive-tools.js"></script>
+    <script src="js/hive-update.js"></script>
+
+</head>
+<body>
+    <!-- Toast الإشعارات -->
+    <div id="alertToast" class="notification-toast">
+        <div class="toast-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div>
+            <div class="toast-title">تنبيه النظام</div>
+            <div id="alertMsg">تم اكتشاف حالة غير طبيعية في الخلية</div>
+        </div>
+    </div>
+
+    <!-- صفحة تسجيل الدخول -->
+    <div id="loginPage">
+        <div class="login-box">
+            <div class="logo-large">Smart Hive<span>OS</span></div>
+            <p class="login-subtitle">نظام تشغيل المنحل الذكي</p>
+            <div class="login-form">
+                <label>اسم المستخدم</label>
+                <input type="text" id="user" class="login-input" placeholder="المدير" value="admin">
+                <label>كلمة المرور</label>
+                <input type="password" id="pass" class="login-input" placeholder="••••••••" value="1234">
+                <div class="remember-me">
+                    <label><input type="checkbox" id="rememberMe"> <span>تذكرني</span></label>
+                    <span id="lastLogin"></span>
+                </div>
+                <button class="btn-add-hive login-btn" onclick="validateLogin()">بدء الجلسة</button>
+            </div>
+            <p id="error" class="error-message">خطأ: بيانات الدخول غير صحيحة</p>
+        </div>
+    </div>
+
+    <!-- سطح المكتب -->
+    <div class="desktop" id="desktop">
+        <!-- شعار في المنتصف -->
+        <div class="desktop-logo-center">
+            <img src="images/logo.png" alt="Smart Hive OS">
+        </div>
+        
+        <!-- أيقونات سطح المكتب -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" ondblclick="openWindow('dash')" data-page="dash">
+                <i class="fas fa-chart-pie"></i>
+                <span>لوحة المعلومات</span>
+            </div>
+            <div class="desktop-icon" ondblclick="openWindow('hives')" data-page="hives">
+                <i class="fas fa-broadcast-tower"></i>
+                <span>الخلايا النشطة</span>
+            </div>
+            <div class="desktop-icon" ondblclick="openWindow('ai')" data-page="ai">
+                <i class="fas fa-user-tie"></i>
+                <span>مستشار النحل</span>
+            </div>
+            <div class="desktop-icon" ondblclick="openWindow('set')" data-page="set">
+                <i class="fas fa-cog"></i>
+                <span>الإعدادات</span>
+            </div>
+            
+            <!-- الأيقونات الجديدة -->
+            <div class="desktop-icon" onclick="openHiveHealth()" data-page="health">
+                <i class="fas fa-heartbeat"></i>
+                <span>صحة الخلية</span>
+            </div>
+            <div class="desktop-icon" onclick="openHiveStats()" data-page="stats">
+                <i class="fas fa-chart-bar"></i>
+                <span>إحصائيات الخلية</span>
+            </div>
+            <div class="desktop-icon" onclick="openHiveTools()" data-page="tools">
+                <i class="fas fa-tools"></i>
+                <span>أدوات التحكم</span>
+            </div>
+			<div class="desktop-icon" onclick="openHiveUpdate()" data-page="update">
+    <i class="fas fa-cloud-upload-alt"></i>
+    <span>تحديث الخلايا</span>
+</div>
+        </div>
+    </div>
+
+    <!-- مساحة العمل (النوافذ) -->
+    <main class="workspace" id="workspace"></main>
+
+    <!-- الصفحات المخفية (قوالب للنوافذ) -->
+    <div style="display: none;">
+        <!-- صفحة لوحة المعلومات -->
+        <div id="dash" class="page">
+            <h1 class="page-title">📊 لوحة المعلومات</h1>
+            <div class="hive-card">
+                <div class="hive-header">
+                    <div class="hive-title-section">
+                        <span>الخلية المحددة:</span>
+                        <select id="hive-selector" class="hive-selector"></select>
+                        <span class="hive-status"><i class="fas fa-circle" style="color: var(--neon-green);"></i> متصل</span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="health-btn" onclick="triggerAlert('🏥 مؤشرات الصحة')"><i class="fas fa-heartbeat"></i></button>
+                        <button class="stats-btn" onclick="triggerAlert('📊 إحصائيات الخلية')"><i class="fas fa-chart-bar"></i></button>
+                        <button class="tools-btn" onclick="triggerAlert('🛠️ أدوات التحكم')"><i class="fas fa-tools"></i></button>
+                        <button class="update-btn" onclick="refreshDashboard()"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </div>
+                <div id="weight-display" class="weight-display">-- <small>كغ</small></div>
+                <div class="system-stats">
+                    <div class="system-stat-box"><div class="system-stat-value" id="uptime-display">00:00:00</div><div class="system-stat-label">⏱️ التشغيل</div></div>
+                    <div class="system-stat-box"><div class="system-stat-value" id="date-display">--</div><div class="system-stat-label">📅 التاريخ</div></div>
+                    <div class="system-stat-box"><div class="system-stat-value" id="time-display">--</div><div class="system-stat-label">🕒 الوقت</div></div>
+                    <div class="system-stat-box"><div class="system-stat-value" id="power-display">--</div><div class="system-stat-label">⚡ البطارية</div></div>
+                </div>
+                <div class="metrics-grid">
+                    <div class="m-box"><small><i class="fas fa-temperature-high"></i> الحرارة</small><div id="temp-display" class="metric-value">-- °C</div></div>
+                    <div class="m-box"><small><i class="fas fa-droplet"></i> الرطوبة</small><div id="hum-display" class="metric-value">-- %</div></div>
+                    <div class="m-box"><small><i class="fas fa-microphone"></i> الصوت</small><div id="audio-display" class="metric-value">-- dB</div></div>
+                    <div class="m-box"><small><i class="fas fa-battery-three-quarters"></i> البطارية</small><div id="batt-display" class="metric-value">-- V</div></div>
+                    <div class="m-box"><small><i class="fas fa-wind"></i> الغاز</small><div id="gas-display" class="metric-value">-- %</div></div>
+                    <div class="m-box"><small><i class="fas fa-person-walking"></i> الحركة</small><div id="motion-display" class="metric-value">--</div></div>
+                    <div class="m-box"><small><i class="fas fa-sun"></i> الإضاءة</small><div id="light-display" class="metric-value">-- %</div></div>
+                    <div class="m-box"><small><i class="fas fa-crown"></i> UV</small><div id="uv-display" class="metric-value">-- %</div></div>
+                    <div class="m-box"><small><i class="fas fa-bug"></i> عدد النحل</small><div id="bee-display" class="metric-value">--</div></div>
+                    <div class="m-box"><small><i class="fas fa-chart-line"></i> قوة المستعمرة</small><div id="colony-strength" class="metric-value">--%</div></div>
+                    <div class="m-box"><small><i class="fas fa-heartbeat"></i> درجة الصحة</small><div id="health-score-display" class="metric-value">--%</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة الخلايا النشطة -->
+        <div id="hives" class="page">
+            <h1 class="page-title">📡 الخلايا النشطة</h1>
+            <div class="hive-card">
+                <div class="hives-stats">
+                    <div class="stat-badge"><i class="fas fa-database"></i><span>إجمالي: <strong id="totalHives">0</strong></span></div>
+                    <div class="stat-badge connected"><i class="fas fa-wifi"></i><span>متصل: <strong id="connectedHives">0</strong></span></div>
+                    <div class="stat-badge offline"><i class="fas fa-exclamation-circle"></i><span>غير متصل: <strong id="offlineHives">0</strong></span></div>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="hiveSearch" placeholder="ابحث عن خلية بالاسم أو MAC..." onkeyup="searchHives(this.value)">
+                </div>
+                <div class="filter-controls">
+                    <button class="filter-btn" onclick="filterHives('all')">الكل</button>
+                    <button class="filter-btn" onclick="filterHives('connected')">المتصلة فقط</button>
+                    <button class="filter-btn" onclick="sortHivesBySignal()">ترتيب حسب الإشارة</button>
+                </div>
+                <div id="hives-status-list" class="hive-status-list"></div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="filter-btn" onclick="scanForHives()"><i class="fas fa-sync-alt"></i> مسح الخلايا القريبة</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة مستشار النحل -->
+        <div id="ai" class="page">
+            <h1 class="page-title">👔 مستشار النحل</h1>
+            <div class="hive-card">
+                <div style="display: flex; flex-direction: column; height: 500px;">
+                    <div class="expert-quick-questions" style="border-radius: 15px 15px 0 0;">
+                        <button class="expert-quick-btn" onclick="askExpertFromPage('ما علاج الفاروا؟')">🦠 علاج الفاروا</button>
+                        <button class="expert-quick-btn" onclick="askExpertFromPage('أعراض النوزيما')">🔬 أعراض النوزيما</button>
+                        <button class="expert-quick-btn" onclick="askExpertFromPage('المسافة القانونية للمنحل')">⚖️ المسافة القانونية</button>
+                        <button class="expert-quick-btn" onclick="askExpertFromPage('كيف أحصل على ترخيص؟')">📋 الترخيص</button>
+                        <button class="expert-quick-btn" onclick="askExpertFromPage('متى أقطف العسل؟')">🍯 قطف العسل</button>
+                        <button class="expert-quick-btn" onclick="diagnoseCurrentHive()">🔍 تشخيص الخلية الحالية</button>
+                    </div>
+                    <div id="aiChatBody" class="chat-body" style="flex: 1; border-radius: 0;">
+                        <div class="ai-bubble">
+                            🐝 مرحباً بك في مستشار النحل!<br><br>
+                            يمكنني مساعدتك في:<br>
+                            • 🦠 تشخيص الأمراض وعلاجها<br>
+                            • ⚖️ الاستشارات القانونية والتراخيص<br>
+                            • 💊 بروتوكولات العلاج<br>
+                            • ❓ الإجابة على الأسئلة الشائعة<br><br>
+                            اكتب سؤالك أو اختر من الأسئلة السريعة أعلاه 👆
+                        </div>
+                    </div>
+                    <div class="chat-footer" style="border-radius: 0 0 15px 15px;">
+                        <input type="text" id="aiChatInput" class="chat-input" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key === 'Enter') sendMessageFromPage()">
+                        <button onclick="sendMessageFromPage()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة الإعدادات -->
+        <div id="set" class="page">
+            <h1 class="page-title">⚙️ الإعدادات</h1>
+            <div class="settings-container">
+                
+                <!-- ١. النظام -->
+                <div class="settings-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <h3><i class="fas fa-cog"></i> النظام</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="setting-row"><div><strong>اللغة</strong><br><small>لغة واجهة النظام</small></div><select class="hive-selector" id="sys-language"><option value="ar">العربية</option><option value="en">English</option><option value="fr">Français</option></select></div>
+                        <div class="setting-row"><div><strong>وضع الحماية التلقائي</strong><br><small>الدخول التلقائي للوضع الآمن</small></div><label class="switch"><input type="checkbox" id="sys-safemode-auto" checked><span class="slider"></span></label></div>
+                        <div class="setting-row"><div><strong>عدد المحاولات قبل الدخول للوضع الآمن</strong></div><select class="hive-selector" id="sys-safemode-limit"><option value="2">2 مرات</option><option value="3" selected>3 مرات</option><option value="5">5 مرات</option><option value="7">7 مرات</option><option value="10">10 مرات</option></select></div>
+                        <div class="setting-row"><div><strong>نواة المعالج للواجهة</strong></div><select class="hive-selector" id="sys-lvgl-core"><option value="0">Core 0</option><option value="1" selected>Core 1</option></select></div>
+                        <div class="setting-row"><div><strong>حجم قائمة انتظار البيانات</strong></div><select class="hive-selector" id="sys-queue-size"><option value="5">صغير (5)</option><option value="10" selected>متوسط (10)</option><option value="20">كبير (20)</option><option value="50">كبير جداً (50)</option></select></div>
+                    </div>
+                </div>
+                
+                <!-- ٢. الشبكة -->
+                <div class="settings-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <h3><i class="fas fa-wifi"></i> الشبكة</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="setting-row"><div><strong>اسم شبكة WiFi</strong></div><input type="text" class="input-mini" style="width:150px;" id="net-ap-ssid" value="SmartHive_OS"></div>
+                        <div class="setting-row"><div><strong>قناة الاتصال</strong></div><select class="hive-selector" id="net-wifi-channel"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6" selected>6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option></select></div>
+                        <div class="setting-row"><div><strong>قناة التواصل مع الخلايا</strong></div><select class="hive-selector" id="net-mesh-channel"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option></select></div>
+                    </div>
+                </div>
+                
+                <!-- ٣. الطاقة -->
+                <div class="settings-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <h3><i class="fas fa-bolt"></i> الطاقة</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="setting-row"><div><strong>سرعة المعالج القصوى</strong></div><select class="hive-selector" id="pwr-max-freq"><option value="240" selected>240 MHz</option><option value="160">160 MHz</option><option value="80">80 MHz</option></select></div>
+                        <div class="setting-row"><div><strong>سرعة المعالج الدنيا</strong></div><select class="hive-selector" id="pwr-min-freq"><option value="40" selected>40 MHz</option><option value="80">80 MHz</option><option value="160">160 MHz</option></select></div>
+                        <div class="setting-row"><div><strong>وضع توفير الطاقة</strong></div><label class="switch"><input type="checkbox" id="pwr-light-sleep" checked><span class="slider"></span></label></div>
+                        <div class="setting-row"><div><strong>مدة السكون العميق</strong></div><select class="hive-selector" id="pwr-deep-sleep"><option value="5">5 دقائق</option><option value="10">10 دقائق</option><option value="15" selected>15 دقيقة</option><option value="30">30 دقيقة</option><option value="60">60 دقيقة</option><option value="120">120 دقيقة</option></select></div>
+                    </div>
+                </div>
+                
+                <!-- ٤. الأمان -->
+                <div class="settings-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <h3><i class="fas fa-shield-alt"></i> الأمان</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="setting-row"><div><strong>تغيير كلمة المرور</strong></div><button class="filter-btn" onclick="changePassword()">تغيير</button></div>
+                        <div class="setting-row"><div><strong>تفعيل الحماية</strong></div><label class="switch"><input type="checkbox" id="sec-encryption" checked><span class="slider"></span></label></div>
+                        <div class="setting-row"><div><strong>تغيير مفتاح الحماية</strong></div><button class="filter-btn" onclick="generateEncryptionKey()">توليد جديد</button></div>
+                        <div class="setting-row"><div><strong>إعادة ضبط المصنع</strong></div><button class="filter-btn" style="background:#3a1a1a;color:#ff6b6b;" onclick="factoryReset()">استعادة الضبط</button></div>
+                    </div>
+                </div>
+                
+                <!-- ٥. المراقبة -->
+                <div class="settings-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <h3><i class="fas fa-chart-line"></i> المراقبة</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="setting-row"><div><strong>فترة تحديث المعلومات</strong></div><select class="hive-selector" id="mon-report-interval"><option value="10">10 ثواني</option><option value="30" selected>30 ثانية</option><option value="60">60 ثانية</option><option value="120">120 ثانية</option></select></div>
+                        <div class="setting-row"><div><strong>مهلة مراقبة النظام</strong></div><select class="hive-selector" id="mon-watchdog-timeout"><option value="5">5 ثواني</option><option value="10">10 ثواني</option><option value="15" selected>15 ثانية</option><option value="30">30 ثانية</option><option value="60">60 ثانية</option></select></div>
+                        <div class="setting-row"><div><strong>تفعيل مراقبة النظام</strong></div><label class="switch"><input type="checkbox" id="mon-watchdog-enable" checked><span class="slider"></span></label></div>
+                    </div>
+                </div>
+                
+                <!-- ٦. التحديث -->
+<div class="settings-section">
+    <div class="section-header" onclick="toggleSection(this)">
+        <h3><i class="fas fa-sync-alt"></i> التحديث</h3>
+        <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="section-content">
+        <div class="setting-row"><div><strong>الإصدار الحالي</strong><br><small id="update-version">v6.0.0</small></div><span class="badge">Smart Hive OS</span></div>
+        <div class="setting-row"><div><strong>التحقق من التحديثات</strong></div><button class="filter-btn" onclick="checkForUpdate()">فحص الآن</button></div>
+        <div class="setting-row"><div><strong>تحميل تحديث</strong></div><input type="file" id="update-file" accept=".bin" style="display:none;"><button class="filter-btn" onclick="document.getElementById('update-file').click()">اختر ملف</button></div>
+        
+        <!-- 🆕 تم تغيير هذا السطر -->
+        <div class="setting-row">
+            <div>
+                <strong>إشعارات التحديث</strong>
+                <br><small>إظهار إشعار عند توفر تحديث جديد</small>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="update-notify" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <div class="setting-row"><div><strong>قناة التحديث</strong></div><select class="hive-selector" id="update-channel"><option value="stable" selected>مستقر (Stable)</option><option value="beta">تجريبي (Beta)</option></select></div>
+        <div class="setting-row"><div><strong>آخر فحص</strong><br><small id="update-last-check">لم يتم الفحص</small></div><span>-</span></div>
+    </div>
+</div>
+                <!-- ٧. النسخ الاحتياطي -->
+                <div class="settings-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <h3><i class="fas fa-database"></i> النسخ الاحتياطي</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="setting-row"><div><strong>تصدير الإعدادات</strong></div><button class="filter-btn" onclick="exportSettings()">تصدير</button></div>
+                        <div class="setting-row"><div><strong>استيراد الإعدادات</strong></div><input type="file" id="import-file" accept=".json" style="display:none;"><button class="filter-btn" onclick="document.getElementById('import-file').click()">استيراد</button></div>
+                        <div class="setting-row"><div><strong>استعادة ضبط المصنع</strong></div><button class="filter-btn" style="background:#3a1a1a;color:#ff6b6b;" onclick="factoryReset()">استعادة</button></div>
+                    </div>
+                </div>
+                
+                <!-- ٨. حول النظام -->
+                <div class="settings-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <h3><i class="fas fa-info-circle"></i> حول النظام</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="section-content">
+                        <div class="setting-row"><div><strong>الإصدار</strong></div><span id="about-version">Smart Hive OS v6.0.0</span></div>
+                        <div class="setting-row"><div><strong>اسم الجهاز</strong></div><span id="about-device-name">SmartHive-01</span></div>
+                        <div class="setting-row"><div><strong>MAC Address</strong></div><span id="about-mac">24:0A:C4:12:34:56</span></div>
+                        <div class="setting-row"><div><strong>وقت التشغيل</strong></div><span id="about-uptime">00:00:00</span></div>
+                        <div class="setting-row"><div><strong>ذاكرة حرة</strong></div><span id="about-free-heap">245 KB</span></div>
+                        <div class="setting-row"><div><strong>PSRAM حرة</strong></div><span id="about-free-psram">7.8 MB</span></div>
+                    </div>
+                </div>
+                
+                <button class="config-btn" onclick="saveAllSettings()">💾 حفظ جميع الإعدادات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط المهام -->
+    <div class="taskbar" id="taskbar">
+        <div class="start-btn" onclick="toggleStartMenu()">
+            <i class="fas fa-bolt"></i>
+            <span>ابدأ</span>
+        </div>
+        <div class="taskbar-apps" id="taskbarApps"></div>
+        <div class="taskbar-right">
+            <div class="taskbar-time" id="taskbarTime">--:--</div>
+            <div class="taskbar-date" id="taskbarDate">--/--/----</div>
+            <div class="taskbar-icons">
+                <i class="fas fa-wifi" onclick="toggleESPNowMenu(event)"></i>
+                <i class="fas fa-battery-three-quarters"></i>
+                <span id="batteryLevel">85%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- قائمة ابدأ -->
+    <div class="start-menu" id="startMenu" style="display: none;">
+        <div class="start-menu-header">
+            <i class="fas fa-user-circle"></i>
+            <span id="startMenuUser">المدير</span>
+        </div>
+        <div class="start-menu-items">
+            <div class="start-menu-item" onclick="openWindow('dash'); toggleStartMenu()"><i class="fas fa-chart-pie"></i> لوحة المعلومات</div>
+            <div class="start-menu-item" onclick="openWindow('hives'); toggleStartMenu()"><i class="fas fa-broadcast-tower"></i> الخلايا النشطة</div>
+            <div class="start-menu-item" onclick="openWindow('ai'); toggleStartMenu()"><i class="fas fa-user-tie"></i> مستشار النحل</div>
+            <div class="start-menu-item" onclick="openWindow('set'); toggleStartMenu()"><i class="fas fa-cog"></i> الإعدادات</div>
+            <div class="start-menu-divider"></div>
+            <div class="start-menu-item" onclick="openSetupWizard(); toggleStartMenu()"><i class="fas fa-wrench"></i> الإعداد لأول مرة</div>
+            <div class="start-menu-item" onclick="toggleFullScreen()"><i class="fas fa-expand"></i> ملء الشاشة</div>
+            <div class="start-menu-item" onclick="restartSystem()"><i class="fas fa-power-off"></i> إعادة تشغيل</div>
+            <div class="start-menu-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</div>
+        </div>
+    </div>
+
+    <!-- نافذة الإعداد لأول مرة -->
+    <div id="setupModal" class="setup-modal">
+        <div class="setup-content">
+            <div class="setup-header">
+                <i class="fas fa-wrench"></i>
+                <h2>الإعداد لأول مرة</h2>
+                <span>الخطوة <span id="currentStepDisplay">1</span>/6</span>
+            </div>
+            <div class="setup-progress"><div class="progress-bar" id="setupProgress" style="width: 16.6%;"></div></div>
+            <div class="setup-steps">
+                <div class="setup-step-indicator active" data-step="1">1. المسؤول</div>
+                <div class="setup-step-indicator" data-step="2">2. المنحل</div>
+                <div class="setup-step-indicator" data-step="3">3. الولاية</div>
+                <div class="setup-step-indicator" data-step="4">4. الشبكة</div>
+                <div class="setup-step-indicator" data-step="5">5. ربط الخلايا</div>
+                <div class="setup-step-indicator" data-step="6">6. تأكيد</div>
+            </div>
+            
+            <div id="setupStep1" class="setup-step active">
+                <div class="form-row"><label>اسم المستخدم</label><input type="text" id="setupUser" class="login-input" value="admin"></div>
+                <div class="form-row"><label>كلمة المرور</label><input type="password" id="setupPass" class="login-input" value="1234" onkeyup="checkPasswordStrength(this.value)"></div>
+                <div class="password-strength"><div class="strength-label"><span>قوة كلمة المرور:</span><span id="strengthText">ضعيف</span></div><div class="strength-bar"><div id="strengthFill" style="width: 25%; background: #ff3e3e;"></div></div></div>
+                <div class="form-row"><label>تأكيد كلمة المرور</label><input type="password" id="setupConfirmPass" class="login-input" value="1234"></div>
+            </div>
+            <div id="setupStep2" class="setup-step">
+                <div class="form-row"><label>اسم المنحل</label><input type="text" id="setupApiary" class="login-input" placeholder="منحل الوادي"></div>
+                <div class="form-row"><label>الموقع</label><input type="text" id="setupLocation" class="login-input" placeholder="الجزائر"></div>
+            </div>
+            <div id="setupStep3" class="setup-step">
+                <div class="form-row"><label>الولاية</label><select id="setupWilaya" class="login-input"></select></div>
+                <div id="setupWilayaInfo" style="background:#111; padding:10px; border-radius:8px; margin-top:10px;"></div>
+            </div>
+            <div id="setupStep4" class="setup-step">
+                <input type="hidden" id="setupNetworkMode" value="ap">
+                <div class="form-row"><label>اسم شبكة WiFi</label><input type="text" id="setupApSsid" class="login-input" value="SmartHive_OS"><small style="color: #888; display: block; margin-top: 5px;"><i class="fas fa-info-circle"></i> هذا الاسم سيظهر عند البحث عن شبكات WiFi</small></div>
+            </div>
+            <div id="setupStep5" class="setup-step">
+                <p style="color: #888; margin-bottom: 15px; text-align: center;"><i class="fas fa-bluetooth"></i> جاري البحث عن الخلايا القريبة تلقائياً...</p>
+                <button class="filter-btn" onclick="scanDevicesSetup()" style="margin-bottom:15px; width: 100%;"><i class="fas fa-sync-alt"></i> إعادة البحث</button>
+                <div id="setupDevicesList" class="ble-device-list" style="max-height: 250px;"></div>
+                <p style="color: #666; font-size: 0.85rem; margin-top: 15px; text-align: center;"><i class="fas fa-info-circle"></i> اضغط على الخلية لاختيارها</p>
+            </div>
+            <div id="setupStep6" class="setup-step">
+                <div id="setupSummary" style="background:#111; padding:15px; border-radius:10px;"></div>
+                <button class="btn-add-hive" onclick="completeSetup()" style="width:100%; margin-top:20px;">تطبيق الإعدادات</button>
+            </div>
+            <div class="setup-buttons">
+                <button class="setup-btn setup-btn-secondary" id="setupPrevBtn" onclick="setupPrev()" style="display: none;"><i class="fas fa-chevron-right"></i> السابق</button>
+                <button class="setup-btn setup-btn-danger" onclick="closeSetupWizard()"><i class="fas fa-times"></i> إلغاء</button>
+                <button class="setup-btn setup-btn-primary" id="setupNextBtn" onclick="setupNext()">التالي <i class="fas fa-chevron-left"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- قائمة الزر الأيمن -->
+    <div id="contextMenu" class="context-menu" style="display: none;">
+        <!-- خيارات سطح المكتب -->
+        <div class="context-menu-items" id="desktop-menu">
+            <div class="context-menu-item" onclick="contextAction('refresh')">
+                <i class="fas fa-sync-alt"></i> <span>تحديث</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" onclick="showArrangeMenu(event.clientX, event.clientY); hideContextMenu();">
+                <i class="fas fa-sort"></i> <span>ترتيب حسب</span>
+            </div>
+            <div class="context-menu-item" onclick="snapIconsToGrid(); hideContextMenu();">
+                <i class="fas fa-th"></i> <span>محاذاة للشبكة</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" onclick="contextAction('properties')">
+                <i class="fas fa-cog"></i> <span>خصائص</span>
+            </div>
+        </div>
+        
+        <!-- خيارات الأيقونة -->
+        <div class="context-menu-items" id="icon-menu" style="display: none;">
+            <div class="context-menu-item" onclick="contextAction('open')">
+                <i class="fas fa-folder-open"></i> <span>فتح</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" onclick="contextAction('pin')">
+                <i class="fas fa-thumbtack"></i> <span>تثبيت</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" onclick="contextAction('properties')">
+                <i class="fas fa-cog"></i> <span>خصائص</span>
+            </div>
+        </div>
+        
+        <!-- خيارات النافذة -->
+        <div class="context-menu-items" id="window-menu" style="display: none;">
+            <div class="context-menu-item" onclick="contextAction('refresh')">
+                <i class="fas fa-sync-alt"></i> <span>تحديث</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" onclick="contextAction('close-window')">
+                <i class="fas fa-times"></i> <span>إغلاق</span>
+            </div>
+            <div class="context-menu-item" onclick="contextAction('minimize')">
+                <i class="fas fa-minus"></i> <span>تصغير</span>
+            </div>
+            <div class="context-menu-item" onclick="contextAction('maximize')">
+                <i class="fas fa-square"></i> <span>تكبير</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" onclick="contextAction('properties')">
+                <i class="fas fa-cog"></i> <span>خصائص</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة خصائص سطح المكتب -->
+    <div id="desktopPropertiesModal" class="desktop-properties-modal" style="display: none;">
+        <div class="properties-content">
+            <div class="properties-header">
+                <i class="fas fa-desktop"></i>
+                <h2>خصائص سطح المكتب</h2>
+                <i class="fas fa-times" onclick="closeDesktopProperties()"></i>
+            </div>
+            <div class="properties-body">
+                <div class="setting-row"><div><strong>خلفية سطح المكتب</strong></div><input type="file" id="wallpaper-input" accept="image/*" style="display:none;"><button class="filter-btn" onclick="document.getElementById('wallpaper-input').click()">اختر صورة</button></div>
+                <div class="wallpaper-presets" id="wallpaper-presets"></div>
+            </div>
+            <div class="properties-footer">
+                <button class="filter-btn" onclick="closeDesktopProperties()">إلغاء</button>
+                <button class="config-btn" onclick="applyDesktopProperties()">تطبيق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- قائمة ESP-NOW -->
+    <div id="espnowMenu" class="system-menu" style="display: none;">
+        <div class="system-menu-header"><i class="fas fa-broadcast-tower"></i><span>ESP-NOW Mesh Network</span></div>
+        <div class="system-menu-divider"></div>
+        <div class="espnow-status">
+            <div class="espnow-status-row"><span>الحالة:</span><span class="espnow-status-value connected" id="espnowState">متصل</span></div>
+            <div class="espnow-status-row"><span>القناة:</span><span id="espnowChannel">1</span></div>
+            <div class="espnow-status-row"><span>الأجهزة المتصلة:</span><span id="espnowDeviceCount">0</span></div>
+        </div>
+        <div class="system-menu-divider"></div>
+        <div id="espnowDeviceList" class="espnow-device-list"></div>
+        <div class="system-menu-divider"></div>
+        <div class="system-menu-item" onclick="scanESPNowDevices()"><i class="fas fa-sync-alt"></i> <span>إعادة مسح</span></div>
+        <div class="system-menu-item" onclick="openWindow('set'); toggleESPNowMenu()"><i class="fas fa-cog"></i> <span>إعدادات ESP-NOW</span></div>
+    </div>
+
+    <!-- نافذة اختيار الخلية -->
+    <div id="hiveSelectorModal" class="hive-selector-modal" style="display: none;">
+        <div class="selector-content">
+            <div class="selector-header">
+                <i class="fas fa-list"></i>
+                <h2 id="selectorTitle">اختر الخلية</h2>
+                <i class="fas fa-times" onclick="closeHiveSelector()"></i>
+            </div>
+            <div class="selector-body">
+                <div class="form-row">
+                    <label>الخلية</label>
+                    <select id="hiveSelectorDropdown" class="hive-selector"></select>
+                </div>
+            </div>
+            <div class="selector-footer">
+                <button class="filter-btn" onclick="closeHiveSelector()">إلغاء</button>
+                <button class="config-btn" id="selectorConfirmBtn" onclick="confirmHiveSelection()">تأكيد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة صحة الخلية -->
+    <div id="hiveHealthModal" class="hive-health-modal" style="display: none;">
+        <div class="health-content">
+            <div class="health-header">
+                <i class="fas fa-heartbeat"></i>
+                <h2>❤️ صحة الخلية - <span id="healthHiveId">HIVE-01</span></h2>
+                <i class="fas fa-times" onclick="closeHiveHealth()"></i>
+            </div>
+            <div class="health-body" id="healthBody">
+                <div class="health-loading">جاري تحميل بيانات الصحة...</div>
+            </div>
+            <div class="health-footer">
+                <button class="filter-btn" onclick="closeHiveHealth()">إغلاق</button>
+                <button class="config-btn" onclick="refreshHiveHealth()"><i class="fas fa-sync-alt"></i> تحديث</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إحصائيات الخلية -->
+    <div id="hiveStatsModal" class="hive-stats-modal" style="display: none;">
+        <div class="stats-content">
+            <div class="stats-header">
+                <i class="fas fa-chart-bar"></i>
+                <h2>📊 إحصائيات - <span id="statsHiveId">جميع الخلايا</span></h2>
+                <i class="fas fa-times" onclick="closeHiveStats()"></i>
+            </div>
+            <div class="stats-body" id="statsBody">
+                <div class="stats-loading">جاري تحميل الإحصائيات...</div>
+            </div>
+            <div class="stats-footer">
+                <button class="filter-btn" onclick="closeHiveStats()">إغلاق</button>
+                <button class="config-btn" onclick="refreshHiveStats()"><i class="fas fa-sync-alt"></i> تحديث</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة أدوات التحكم -->
+    <div id="hiveToolsModal" class="hive-tools-modal" style="display: none;">
+        <div class="tools-content">
+            <div class="tools-header">
+                <i class="fas fa-tools"></i>
+                <h2>🛠️ أدوات التحكم - <span id="toolsHiveId">HIVE-01</span></h2>
+                <i class="fas fa-times" onclick="closeHiveTools()"></i>
+            </div>
+            <div class="tools-body" id="toolsBody">
+                <div class="tool-buttons">
+                    <button class="tool-btn" onclick="sendControlCommand('fan_on')">
+                        <i class="fas fa-fan"></i> تشغيل المروحة
+                    </button>
+                    <button class="tool-btn" onclick="sendControlCommand('fan_off')">
+                        <i class="fas fa-fan"></i> إيقاف المروحة
+                    </button>
+                    <button class="tool-btn" onclick="sendControlCommand('restart')">
+                        <i class="fas fa-power-off"></i> إعادة تشغيل الخلية
+                    </button>
+                    <button class="tool-btn" onclick="sendControlCommand('calibrate')">
+                        <i class="fas fa-sync-alt"></i> معايرة الحساسات
+                    </button>
+                    <button class="tool-btn" onclick="sendControlCommand('battery_check')">
+                        <i class="fas fa-battery-three-quarters"></i> فحص البطارية
+                    </button>
+                </div>
+                <div id="toolsResult" class="tools-result"></div>
+            </div>
+            <div class="tools-footer">
+                <button class="filter-btn" onclick="closeHiveTools()">إغلاق</button>
+            </div>
+        </div>
+    </div>
+	<!-- نافذة تحديث الخلية (OTA) -->
+<div id="hiveUpdateModal" class="hive-update-modal" style="display: none;">
+    <div class="update-content">
+        <div class="update-header">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <h2>🔄 تحديث النظام - <span id="updateHiveId">HIVE-01</span></h2>
+            <i class="fas fa-times" onclick="closeHiveUpdate()"></i>
+        </div>
+        <div class="update-body" id="updateBody">
+            <div class="update-loading"><i class="fas fa-spinner fa-pulse"></i> جاري تحميل معلومات الخلية...</div>
+        </div>
+        <div class="update-footer">
+            <button class="filter-btn" onclick="closeHiveUpdate()">إغلاق</button>
+            <button class="config-btn" id="startUpdateBtn" onclick="startUpdateProcess()" disabled>
+                <i class="fas fa-cloud-upload-alt"></i> بدء التحديث
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

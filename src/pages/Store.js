@@ -1,38 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Store.css';
 
 function Store() {
   const navigate = useNavigate();
-
-  const [products] = useState([
-    { id: 1, name: 'حساس حرارة ورطوبة', price: 29, image: 'thermometer-half', category: 'sensor' },
-    { id: 2, name: 'حساس وزن HX711', price: 49, image: 'weight-scale', category: 'sensor' },
-    { id: 3, name: 'حساس CO2', price: 79, image: 'wind', category: 'sensor' },
-    { id: 4, name: 'لوحة ESP32-S3', price: 25, image: 'microchip', category: 'board' },
-    { id: 5, name: 'بطارية ليثيوم 18650', price: 19, image: 'battery-full', category: 'power' },
-    { id: 6, name: 'شاحن بطاريات', price: 15, image: 'charging-station', category: 'power' },
-  ]);
-
-  const categories = ['الكل', 'sensor', 'board', 'power'];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('الكل');
+
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/store/api/products/`)
+      .then(res => res.json())
+      .then(data => {
+        const formatted = data.map(p => ({
+          id: p.product_id,
+          name: p.name,
+          price: parseFloat(p.price),
+          image: p.image_url || 'box',
+          category: p.category,
+          stock: p.stock_quantity
+        }));
+        setProducts(formatted);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to fetch products:', err);
+        setLoading(false);
+      });
+  }, [API_URL]);
+
+  const categories = ['الكل', ...new Set(products.map(p => p.category))];
 
   const filteredProducts = activeCategory === 'الكل' 
     ? products 
     : products.filter(p => p.category === activeCategory);
 
+  if (loading) {
+    return (
+      <div className="page-container hex-bg">
+        <div className="container">
+          <div className="loading">جاري تحميل المنتجات...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="page-container hex-bg">
       <div className="container">
-        <div className="page-header">
-          <h1 className="text-gradient">المتجر</h1>
-          <p className="page-subtitle">قطع غيار وإكسسوارات أصلية</p>
-        </div>
+        
 
         <div className="store-categories">
           {categories.map(cat => (
-            <button key={cat} className={`category-btn ${activeCategory === cat ? 'active' : ''}`} onClick={() => setActiveCategory(cat)}>
-              {cat === 'الكل' ? 'الكل' : cat === 'sensor' ? 'حساسات' : cat === 'board' ? 'لوحات' : 'طاقة'}
+            <button 
+              key={cat} 
+              className={`category-btn ${activeCategory === cat ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat)}
+            >
+              {cat === 'الكل' ? 'الكل' : cat === 'SENSOR' ? 'حساسات' : cat === 'BOARD' ? 'لوحات' : cat === 'CABLE' ? 'كوابل' : 'إكسسوارات'}
             </button>
           ))}
         </div>
@@ -44,7 +71,7 @@ function Store() {
                 <i className={`fas fa-${product.image}`}></i>
               </div>
               <h3>{product.name}</h3>
-              <p className="product-price">${product.price}</p>
+              <p className="product-price">{product.price}دج</p>
               <button className="btn-order-now">
                 <i className="fas fa-shopping-cart"></i> طلب الآن
               </button>

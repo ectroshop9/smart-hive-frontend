@@ -1,0 +1,64 @@
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.error-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--alert-red);
+  border-radius: 20px;
+  padding: 50px 40px;
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.error-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 25px;
+  background: var(--alert-red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.error-icon i {
+  font-size: 60px;
+  color: #fff;
+}
+.error-card h1 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: var(--heading-color);
+}
+.user-greeting {
+  font-size: 1.2rem;
+  color: var(--heading-color);
+  margin-bottom: 10px;
+}
+.error-message {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+}
+.error-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.error-actions .btn-outline {
+  background: transparent;
+  color: #FFC107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  padding: 12px 25px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.error-actions .btn-outline:hover {
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  color: #fff;
+  border-color: #FFC107;
+}

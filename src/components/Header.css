@@ -6,7 +6,7 @@
   z-index: 9999;
   background: rgba(5, 5, 5, 0.95);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-gold);
+  border-bottom: 1px solid rgba(255, 193, 7, 0.3);
   padding: 15px 0;
 }
 
@@ -22,12 +22,16 @@
   gap: 10px;
 }
 
-.logo-icon { font-size: 32px; }
+.logo-image {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
 
 .logo-text {
   font-size: 24px;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--neon-gold), var(--gold-light));
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -43,7 +47,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-family: inherit;
 }
 
@@ -54,7 +58,7 @@
   left: 0;
   width: 0;
   height: 2px;
-  background: var(--neon-gold);
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
   transition: width 0.3s;
 }
 
@@ -62,7 +66,7 @@
 .nav-link.active::after { width: 100%; }
 
 .nav-link:hover,
-.nav-link.active { color: var(--neon-gold); }
+.nav-link.active { color: #FFC107; }
 
 .header-actions {
   display: flex;
@@ -71,14 +75,23 @@
 }
 
 .btn-activate {
-  background: var(--neon-gold);
-  color: var(--bg-black);
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  color: #fff;
   font-weight: bold;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-activate:hover {
+  background: linear-gradient(135deg, #FFC107, #FF4D00);
+  border-color: #FFC107;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+  transform: translateX(-3px);
 }
 
 .btn-login {
@@ -87,21 +100,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  color: var(--pure-white);
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 14px;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+  background: linear-gradient(135deg, #FFC107, #FF4D00);
+  border-color: #FFC107;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+  transform: translateX(-3px);
 }
 
 .btn-dashboard {
-  background: linear-gradient(135deg, var(--neon-gold), var(--gold-light));
-  color: var(--bg-black);
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  color: #fff;
   font-weight: bold;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.btn-dashboard:hover {
+  background: linear-gradient(135deg, #FFC107, #FF4D00);
+  border-color: #FFC107;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+  transform: translateX(-3px);
 }
 
 .user-menu {
@@ -111,10 +140,10 @@
 
 .btn-user {
   background: transparent;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 193, 7, 0.3);
   color: var(--pure-white);
   padding: 10px 15px;
-  border-radius: 8px;
+  border-radius: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -122,10 +151,12 @@
   font-size: 1rem;
   position: relative;
   z-index: 10001;
+  transition: all 0.3s ease;
 }
 
 .btn-user:hover {
-  border-color: var(--neon-gold);
+  border-color: #FFC107;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.15);
 }
 
 .user-dropdown {
@@ -133,8 +164,8 @@
   top: calc(100% + 10px);
   left: 0;
   background: var(--bg-secondary);
-  border: 1px solid var(--border-gold);
-  border-radius: 8px;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 14px;
   padding: 10px 0;
   min-width: 180px;
   z-index: 10002;
@@ -159,12 +190,13 @@
 .user-dropdown a:hover,
 .user-dropdown button:hover {
   background: var(--bg-tertiary);
-  color: var(--neon-gold);
+  color: #FFC107;
 }
 
 @media (max-width: 768px) {
   .nav-menu { display: none; }
   .logo-text { font-size: 18px; }
+  .logo-image { width: 45px; height: 45px; }
   .btn-activate span, .btn-dashboard span, .btn-user span { display: none; }
 }
 
@@ -173,4 +205,4 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 [data-theme="light"] .nav-link { color: var(--text-primary); }
-[data-theme="light"] .nav-link:hover { color: var(--neon-gold); }
+[data-theme="light"] .nav-link:hover { color: #FF4D00; }

@@ -1,7 +1,0 @@
-.quick-actions { position: fixed; bottom: 30px; right: 30px; z-index: 997; display: flex; flex-direction: column-reverse; align-items: center; gap: 15px; }
-.quick-menu { display: flex; flex-direction: column; gap: 10px; }
-.quick-menu button { width: 50px; height: 50px; background: var(--bg-secondary); border: 1px solid var(--border-gold); border-radius: 50%; color: var(--neon-gold); cursor: pointer; font-size: 1.2rem; transition: all 0.3s; animation: fadeIn 0.3s ease; }
-.quick-menu button:hover { background: var(--neon-gold); color: var(--bg-black); transform: scale(1.1); }
-.quick-toggle { width: 60px; height: 60px; background: var(--neon-gold); border: none; border-radius: 50%; color: var(--bg-black); cursor: pointer; font-size: 1.5rem; transition: all 0.3s; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.4); }
-.quick-toggle:hover { transform: rotate(90deg) scale(1.1); }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
