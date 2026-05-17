@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { setSecureItem } from '../utils/encrypt';
 import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 import './Activate.css';
 
 function Activate() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     serialKey: '',
@@ -41,7 +43,7 @@ function Activate() {
       const data = await response.json();
       setEmailExists(data.exists);
       if (data.exists) {
-        setErrors(prev => ({ ...prev, email: 'هذا البريد الإلكتروني مستخدم مسبقاً' }));
+        setErrors(prev => ({ ...prev, email: t('activate.errors.emailUsed') }));
       } else {
         setErrors(prev => ({ ...prev, email: '' }));
       }
@@ -60,7 +62,7 @@ function Activate() {
       setFormData({ ...formData, [name]: upperValue });
       
       if (upperValue && !validateSerialKey(upperValue)) {
-        setErrors(prev => ({ ...prev, serialKey: 'صيغة السيريال: SMART-XXXX-XXXX' }));
+        setErrors(prev => ({ ...prev, serialKey: t('activate.errors.serialFormat') }));
       } else {
         setErrors(prev => ({ ...prev, serialKey: '' }));
       }
@@ -72,7 +74,7 @@ function Activate() {
       setFormData({ ...formData, [name]: phoneValue });
       
       if (phoneValue && phoneValue.length < 10) {
-        setErrors(prev => ({ ...prev, phone: 'رقم الهاتف يجب أن يكون 10 أرقام' }));
+        setErrors(prev => ({ ...prev, phone: t('activate.errors.phoneLength') }));
       } else {
         setErrors(prev => ({ ...prev, phone: '' }));
       }
@@ -86,7 +88,7 @@ function Activate() {
       const confirm = name === 'passwordConfirm' ? value : formData.passwordConfirm;
       
       if (password && confirm && password !== confirm) {
-        setErrors(prev => ({ ...prev, passwordConfirm: 'كلمة المرور غير متطابقة' }));
+        setErrors(prev => ({ ...prev, passwordConfirm: t('activate.errors.passwordMatch') }));
       } else {
         setErrors(prev => ({ ...prev, passwordConfirm: '' }));
       }
@@ -95,12 +97,11 @@ function Activate() {
     if (name === 'email') {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (value && !emailRegex.test(value)) {
-        setErrors(prev => ({ ...prev, email: 'بريد إلكتروني غير صالح' }));
+        setErrors(prev => ({ ...prev, email: t('activate.errors.emailInvalid') }));
       } else {
         setErrors(prev => ({ ...prev, email: '' }));
         if (value && emailRegex.test(value)) {
-          const timeoutId = setTimeout(() => checkEmailExists(value), 500);
-          return () => clearTimeout(timeoutId);
+          setTimeout(() => checkEmailExists(value), 500);
         }
       }
     }
@@ -110,22 +111,22 @@ function Activate() {
     e.preventDefault();
     
     if (!validateSerialKey(formData.serialKey)) {
-      setErrors(prev => ({ ...prev, serialKey: 'صيغة السيريال: SMART-XXXX-XXXX' }));
+      setErrors(prev => ({ ...prev, serialKey: t('activate.errors.serialFormat') }));
       return;
     }
     
     if (formData.phone.length !== 10) {
-      setErrors(prev => ({ ...prev, phone: 'رقم الهاتف يجب أن يكون 10 أرقام' }));
+      setErrors(prev => ({ ...prev, phone: t('activate.errors.phoneLength') }));
       return;
     }
     
     if (formData.password !== formData.passwordConfirm) {
-      setErrors(prev => ({ ...prev, passwordConfirm: 'كلمة المرور غير متطابقة' }));
+      setErrors(prev => ({ ...prev, passwordConfirm: t('activate.errors.passwordMatch') }));
       return;
     }
     
     if (emailExists) {
-      setErrors(prev => ({ ...prev, email: 'هذا البريد الإلكتروني مستخدم مسبقاً' }));
+      setErrors(prev => ({ ...prev, email: t('activate.errors.emailUsed') }));
       return;
     }
 
@@ -152,12 +153,12 @@ function Activate() {
         setSecureItem('userName', formData.name);
         navigate('/activation-success', { state: { userName: formData.name } });
       } else {
-        setErrors(prev => ({ ...prev, general: data.error || 'كود التفعيل غير صحيح' }));
+        setErrors(prev => ({ ...prev, general: data.error || t('activate.errors.invalidKey') }));
       }
     })
     .catch(error => {
       setLoading(false);
-      setErrors(prev => ({ ...prev, general: 'فشل الاتصال بالسيرفر' }));
+      setErrors(prev => ({ ...prev, general: t('activate.errors.server') }));
     });
   };
 
@@ -168,8 +169,8 @@ function Activate() {
           <div className="activate-card">
             <div className="activate-header">
               <div className="hex-icon-large"><i className="fas fa-key"></i></div>
-              <h1 className="text-gradient">تسجيل</h1>
-              <p>أدخل السيريال الموجود مع الجهاز</p>
+              <h1 className="text-gradient">{t('activate.title')}</h1>
+              <p>{t('activate.subtitle')}</p>
             </div>
 
             {errors.general && (
@@ -181,7 +182,7 @@ function Activate() {
 
             <form onSubmit={handleSubmit} className="activate-form">
               <div className={`form-group ${errors.serialKey ? 'has-error' : ''}`}>
-                <label><i className="fas fa-ticket-alt"></i> السيريال</label>
+                <label><i className="fas fa-ticket-alt"></i> {t('activate.serial')}</label>
                 <input 
                   type="text" 
                   name="serialKey" 
@@ -197,11 +198,11 @@ function Activate() {
               
               <div className="form-row">
                 <div className={`form-group ${errors.name ? 'has-error' : ''}`}>
-                  <label><i className="fas fa-user"></i> الاسم الكامل</label>
+                  <label><i className="fas fa-user"></i> {t('activate.name')}</label>
                   <input type="text" name="name" value={formData.name} onChange={handleChange} required disabled={loading} />
                 </div>
                 <div className={`form-group ${errors.phone ? 'has-error' : ''}`}>
-                  <label><i className="fas fa-phone"></i> رقم الهاتف</label>
+                  <label><i className="fas fa-phone"></i> {t('activate.phone')}</label>
                   <input 
                     type="tel" 
                     name="phone" 
@@ -216,7 +217,7 @@ function Activate() {
               </div>
               
               <div className={`form-group ${errors.email ? 'has-error' : ''}`}>
-                <label><i className="fas fa-envelope"></i> البريد الإلكتروني</label>
+                <label><i className="fas fa-envelope"></i> {t('activate.email')}</label>
                 <input 
                   type="email" 
                   name="email" 
@@ -225,36 +226,36 @@ function Activate() {
                   required 
                   disabled={loading}
                 />
-                {checkingEmail && <span className="info-message"><i className="fas fa-spinner fa-spin"></i> جاري التحقق...</span>}
+                {checkingEmail && <span className="info-message"><i className="fas fa-spinner fa-spin"></i> {t('activate.checking')}</span>}
                 {errors.email && <span className="error-message">{errors.email}</span>}
               </div>
               
               <div className="form-row">
                 <div className="form-group">
-                  <label><i className="fas fa-lock"></i> كلمة المرور</label>
+                  <label><i className="fas fa-lock"></i> {t('activate.password')}</label>
                   <input type="password" name="password" value={formData.password} onChange={handleChange} required disabled={loading} />
                   <PasswordStrengthMeter password={formData.password} />
                 </div>
                 <div className={`form-group ${errors.passwordConfirm ? 'has-error' : ''}`}>
-                  <label><i className="fas fa-lock"></i> تأكيد كلمة المرور</label>
+                  <label><i className="fas fa-lock"></i> {t('activate.passwordConfirm')}</label>
                   <input type="password" name="passwordConfirm" value={formData.passwordConfirm} onChange={handleChange} required disabled={loading} />
                   {errors.passwordConfirm && <span className="error-message">{errors.passwordConfirm}</span>}
                 </div>
               </div>
               
               <div className="form-group">
-                <label><i className="fas fa-map-marker-alt"></i> عنوان الشحن (اختياري)</label>
+                <label><i className="fas fa-map-marker-alt"></i> {t('activate.address')}</label>
                 <textarea name="address" value={formData.address} onChange={handleChange} rows="3" disabled={loading}></textarea>
               </div>
               
               <button type="submit" className="btn-activate-submit" disabled={loading}>
                 <i className={`fas fa-${loading ? 'spinner fa-spin' : 'check-circle'}`}></i> 
-                {loading ? 'جاري التسجيل...' : 'تسجيل'}
+                {loading ? t('activate.loading') : t('activate.button')}
               </button>
             </form>
             
             <div className="activate-footer">
-              <p>لديك حساب بالفعل؟ <Link to="/login">تسجيل الدخول</Link></p>
+              <p>{t('activate.hasAccount')} <Link to="/login">{t('activate.login')}</Link></p>
             </div>
           </div>
         </div>

@@ -1,17 +1,26 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './Sidebar.css';
 
 function Sidebar({ userName, onLogout }) {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'ar' ? 'en' : 'ar';
+    i18n.changeLanguage(newLang);
+    document.documentElement.lang = newLang;
+    document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+  };
 
   const menuItems = [
-    { path: '/dashboard', icon: 'tachometer-alt', label: 'لوحة التحكم', end: true },
-    { path: '/dashboard/my-hive', icon: 'hive', label: 'منحلي' },
-    { path: '/dashboard/certificates', icon: 'certificate', label: 'شهادات المنشأ' },
-    { path: '/dashboard/my-devices', icon: 'microchip', label: 'أجهزتي' },
-    { path: '/dashboard/alerts', icon: 'bell', label: 'التنبيهات' },
-    { path: '/dashboard/profile', icon: 'user-circle', label: 'حسابي' },
+    { path: '/dashboard', icon: 'tachometer-alt', label: t('sidebar.dashboard'), end: true },
+    { path: '/dashboard/my-hive', icon: 'hive', label: t('sidebar.myHive') },
+    { path: '/dashboard/certificates', icon: 'certificate', label: t('sidebar.certificates') },
+    { path: '/dashboard/my-devices', icon: 'microchip', label: t('sidebar.myDevices') },
+    { path: '/dashboard/alerts', icon: 'bell', label: t('sidebar.alerts') },
+    { path: '/dashboard/profile', icon: 'user-circle', label: t('sidebar.profile') },
   ];
 
   return (
@@ -29,7 +38,7 @@ function Sidebar({ userName, onLogout }) {
         </div>
         <div className="user-info">
           <span className="user-name">{userName}</span>
-          <span className="user-role">نحال</span>
+          <span className="user-role">{t('sidebar.role')}</span>
         </div>
       </div>
 
@@ -47,10 +56,18 @@ function Sidebar({ userName, onLogout }) {
         ))}
       </nav>
 
+      {/* زر تبديل اللغة */}
+      <div className="sidebar-lang-switcher">
+        <button className="lang-toggle-btn" onClick={toggleLanguage}>
+          <i className="fas fa-language"></i>
+          <span>{i18n.language === 'ar' ? 'English' : 'العربية'}</span>
+        </button>
+      </div>
+
       <div className="sidebar-footer">
         <button className="logout-btn" onClick={onLogout}>
           <i className="fas fa-sign-out-alt"></i>
-          <span>تسجيل الخروج</span>
+          <span>{t('sidebar.logout')}</span>
         </button>
       </div>
     </div>

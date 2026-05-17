@@ -1,11 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ToastContext } from '../App';
 import { setSecureItem } from '../utils/encrypt';
 import './Login.css';
 
 function Login() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { addToast } = useContext(ToastContext);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,10 +45,10 @@ function Login() {
     
     const newErrors = {};
     if (!formData.email.trim()) {
-      newErrors.email = 'البريد الإلكتروني مطلوب';
+      newErrors.email = t('login.errors.email');
     }
     if (!formData.password) {
-      newErrors.password = 'كلمة المرور مطلوبة';
+      newErrors.password = t('login.errors.password');
     }
     
     if (Object.keys(newErrors).length > 0) {
@@ -70,27 +72,27 @@ function Login() {
       const data = await response.json();
 
       if (response.ok && (data.success || data.token)) {
-        // تخزين مشفر
         setSecureItem('isLoggedIn', 'true');
         setSecureItem('authToken', data.token || 'dummy-token');
         setSecureItem('userName', data.name || formData.email.split('@')[0]);
         setSecureItem('userId', data.user_id || 'BEEK-0010');        
+        
         if (formData.rememberMe) {
           localStorage.setItem('rememberMe', 'true');
           localStorage.setItem('savedEmail', formData.email);
         }
         
-        addToast('تم تسجيل الدخول بنجاح!', 'success');
+        addToast(t('login.success'), 'success');
         navigate('/dashboard');
       } else {
         if (response.status === 401) {
-          setErrors({ general: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
+          setErrors({ general: t('login.errors.invalid') });
         } else {
-          setErrors({ general: data.error || 'فشل تسجيل الدخول' });
+          setErrors({ general: data.error || t('login.errors.failed') });
         }
       }
     } catch (error) {
-      setErrors({ general: 'فشل الاتصال بالسيرفر' });
+      setErrors({ general: t('login.errors.server') });
     } finally {
       setLoading(false);
     }
@@ -105,8 +107,8 @@ function Login() {
               <div className="hex-icon-large">
                 <i className="fas fa-sign-in-alt"></i>
               </div>
-              <h1 className="text-gradient">تسجيل الدخول</h1>
-              <p>مرحباً بعودتك إلى Smart Hive</p>
+              <h1 className="text-gradient">{t('login.title')}</h1>
+              <p>{t('login.subtitle')}</p>
             </div>
 
             {errors.general && (
@@ -118,13 +120,13 @@ function Login() {
 
             <form onSubmit={handleSubmit} className="login-form">
               <div className={`form-group ${errors.email ? 'has-error' : ''}`}>
-                <label><i className="fas fa-envelope"></i> البريد الإلكتروني</label>
+                <label><i className="fas fa-envelope"></i> {t('login.email')}</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="example@email.com"
+                  placeholder={t('login.emailPlaceholder')}
                   disabled={loading}
                   autoComplete="email"
                 />
@@ -132,7 +134,7 @@ function Login() {
               </div>
 
               <div className={`form-group ${errors.password ? 'has-error' : ''}`}>
-                <label><i className="fas fa-lock"></i> كلمة المرور</label>
+                <label><i className="fas fa-lock"></i> {t('login.password')}</label>
                 <input
                   type="password"
                   name="password"
@@ -154,28 +156,28 @@ function Login() {
                     onChange={handleChange}
                     disabled={loading}
                   />
-                  <span>تذكرني</span>
+                  <span>{t('login.rememberMe')}</span>
                 </label>
-                <Link to="/forgot-password" className="forgot-link">نسيت كلمة المرور؟</Link>
+                <Link to="/forgot-password" className="forgot-link">{t('login.forgot')}</Link>
               </div>
 
               <button type="submit" className="btn-login-submit" disabled={loading}>
                 {loading ? (
                   <>
                     <i className="fas fa-spinner fa-spin"></i>
-                    جاري الدخول...
+                    {t('login.loading')}
                   </>
                 ) : (
                   <>
                     <i className="fas fa-sign-in-alt"></i>
-                    دخول
+                    {t('login.button')}
                   </>
                 )}
               </button>
             </form>
 
             <div className="login-footer">
-              <p>ليس لديك حساب؟ <Link to="/activate">صفحة التسجيل</Link></p>
+              <p>{t('login.noAccount')} <Link to="/activate">{t('login.register')}</Link></p>
             </div>
           </div>
         </div>

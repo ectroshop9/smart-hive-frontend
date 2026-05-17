@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './Welcome.css';
 
 function Welcome() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [userName, setUserName] = useState('');
   const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
-    const name = localStorage.getItem('userName') || 'النحال';
+    const name = localStorage.getItem('userName') || t('welcome.defaultName');
     setUserName(name);
 
     const timer = setInterval(() => {
@@ -22,7 +24,7 @@ function Welcome() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [navigate]);
+  }, [navigate, t]);
 
   return (
     <div className="welcome-page hex-bg">
@@ -31,13 +33,13 @@ function Welcome() {
           <div className="welcome-icon">
             <i className="fas fa-check-circle"></i>
           </div>
-          <h1 className="text-gradient">تم تفعيل حسابك بنجاح!</h1>
-          <p className="welcome-message">مرحباً بك في فضاء النحالين، {userName}</p>
-          <p className="welcome-subtitle">🐝 Smart Hive - مجتمع النحالين الأذكياء</p>
+          <h1 className="text-gradient">{t('welcome.title')}</h1>
+          <p className="welcome-message">{t('welcome.message', { name: userName })}</p>
+          <p className="welcome-subtitle">{t('welcome.subtitle')}</p>
           <div className="redirect-info">
-            <p>سيتم تحويلك إلى لوحة التحكم خلال {countdown} ثوانٍ...</p>
+            <p>{t('welcome.redirect', { count: countdown })}</p>
             <button className="btn-gold" onClick={() => navigate('/dashboard')}>
-              الذهاب الآن <i className="fas fa-arrow-left"></i>
+              {t('welcome.goNow')} <i className="fas fa-arrow-left"></i>
             </button>
           </div>
         </div>

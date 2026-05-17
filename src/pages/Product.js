@@ -1,80 +1,75 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './Product.css';
 
 function Product() {
   const navigate = useNavigate();
-  
+  const { t } = useTranslation();
+
   const features = [
-    { icon: 'wifi', title: 'اتصال Mesh', description: 'شبكة محلية قوية بدون إنترنت' },
-    { icon: 'microchip', title: 'معالج ESP32-S3', description: 'أداء عالي واستهلاك منخفض' },
-    { icon: 'battery-full', title: 'بطارية تدوم طويلاً', description: 'نوم عميق تلقائي لتوفير الطاقة' },
-    { icon: 'cloud-upload-alt', title: 'تحديثات OTA', description: 'تحديث عن بعد بدون فتح الجهاز' },
-    { icon: 'shield-alt', title: 'تشفير البيانات', description: 'حماية كاملة لبياناتك' },
-    { icon: 'brain', title: 'ذكاء اصطناعي', description: 'تحليل البيانات وتنبؤات ذكية' },
+    { icon: 'wifi', title: t('product.features.mesh.title'), description: t('product.features.mesh.desc') },
+    { icon: 'microchip', title: t('product.features.chip.title'), description: t('product.features.chip.desc') },
+    { icon: 'battery-full', title: t('product.features.battery.title'), description: t('product.features.battery.desc') },
+    { icon: 'cloud-upload-alt', title: t('product.features.ota.title'), description: t('product.features.ota.desc') },
+    { icon: 'shield-alt', title: t('product.features.security.title'), description: t('product.features.security.desc') },
+    { icon: 'brain', title: t('product.features.ai.title'), description: t('product.features.ai.desc') },
   ];
 
   return (
     <div className="page-container hex-bg">
       <div className="container">
         <div className="page-header">
-          <h1 className="text-gradient">ماستر وسلايف</h1>
-          <p className="page-subtitle">أجهزة ذكية لمراقبة خلايا النحل</p>
+          <h1 className="text-gradient">{t('product.title')}</h1>
+          <p className="page-subtitle">{t('product.subtitle')}</p>
         </div>
 
         <div className="products-showcase">
+          {/* ماستر */}
           <div className="product-hero">
             <div className="product-hero-content">
-              <h2>جهاز الماستر</h2>
-              <p className="product-description">
-                وحدة التحكم الرئيسية. تتصل بالإنترنت وتستقبل البيانات من جميع السلايفات.
-                مزودة بشاشة LCD و WiFi و Mesh.
-              </p>
+              <h2>{t('product.master.title')}</h2>
+              <p className="product-description">{t('product.master.desc')}</p>
               <ul className="product-specs">
-                <li><i className="fas fa-check-circle"></i> معالج ESP32-S3</li>
-                <li><i className="fas fa-check-circle"></i> شاشة TFT 3.5"</li>
-                <li><i className="fas fa-check-circle"></i> WiFi + Bluetooth</li>
-                <li><i className="fas fa-check-circle"></i> يدعم حتى 10 سلايف</li>
-                <li><i className="fas fa-check-circle"></i> تحديثات OTA</li>
+                {t('product.master.specs', { returnObjects: true }).map((spec, i) => (
+                  <li key={i}><i className="fas fa-check-circle"></i> {spec}</li>
+                ))}
               </ul>
               <div className="product-price">
                 <span className="price">$299</span>
                 <button className="btn-gold" onClick={() => navigate('/store')}>
-                  <i className="fas fa-shopping-cart"></i> شراء الآن
+                  <i className="fas fa-shopping-cart"></i> {t('product.buyNow')}
                 </button>
               </div>
             </div>
             <div className="product-hero-image">
               <div className="hex-placeholder">
                 <i className="fas fa-server"></i>
-                <span>ماستر</span>
+                <span>{t('product.master.label')}</span>
               </div>
             </div>
           </div>
 
+          {/* سلايف */}
           <div className="product-hero reverse">
             <div className="product-hero-image">
               <div className="hex-placeholder">
                 <i className="fas fa-hive"></i>
-                <span>سلايف</span>
+                <span>{t('product.slave.label')}</span>
               </div>
             </div>
             <div className="product-hero-content">
-              <h2>جهاز السلايف</h2>
-              <p className="product-description">
-                وحدة مراقبة توضع داخل الخلية. تقيس الحرارة، الرطوبة، الوزن، الصوت، وترسلها للماستر.
-              </p>
+              <h2>{t('product.slave.title')}</h2>
+              <p className="product-description">{t('product.slave.desc')}</p>
               <ul className="product-specs">
-                <li><i className="fas fa-check-circle"></i> 15 حساس مدمج</li>
-                <li><i className="fas fa-check-circle"></i> بطارية تدوم 6 أشهر</li>
-                <li><i className="fas fa-check-circle"></i> نوم عميق تلقائي</li>
-                <li><i className="fas fa-check-circle"></i> مقاوم للماء والغبار</li>
-                <li><i className="fas fa-check-circle"></i> تحديثات OTA عبر الماستر</li>
+                {t('product.slave.specs', { returnObjects: true }).map((spec, i) => (
+                  <li key={i}><i className="fas fa-check-circle"></i> {spec}</li>
+                ))}
               </ul>
               <div className="product-price">
                 <span className="price">$149</span>
                 <button className="btn-gold" onClick={() => navigate('/store')}>
-                  <i className="fas fa-shopping-cart"></i> شراء الآن
+                  <i className="fas fa-shopping-cart"></i> {t('product.buyNow')}
                 </button>
               </div>
             </div>
@@ -82,7 +77,7 @@ function Product() {
         </div>
 
         <div className="features-section">
-          <h2 className="section-title text-gradient">المميزات</h2>
+          <h2 className="section-title text-gradient">{t('product.featuresTitle')}</h2>
           <div className="features-grid">
             {features.map((feature, index) => (
               <div key={index} className="feature-card">

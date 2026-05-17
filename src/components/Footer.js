@@ -1,15 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './Footer.css';
 
 function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="footer">
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
             <h4>SMART HIVE</h4>
-            <p>نظام ذكي لمراقبة خلايا النحل وإدارتها عن بعد</p>
+            <p>{t('footer.tagline')}</p>
             <div className="social-links">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                 <i className="fab fa-facebook"></i>
@@ -27,22 +30,22 @@ function Footer() {
           </div>
           
           <div className="footer-section">
-            <h4>الدعم</h4>
-            <Link to="/contact">اتصل بنا</Link>
-            <Link to="/privacy">سياسة الخصوصية</Link>
-            <Link to="/terms">شروط الاستخدام</Link>
+            <h4>{t('footer.support')}</h4>
+            <Link to="/contact">{t('footer.contact')}</Link>
+            <Link to="/privacy">{t('footer.privacy')}</Link>
+            <Link to="/terms">{t('footer.terms')}</Link>
           </div>
           
           <div className="footer-section">
-            <h4>تواصل معنا</h4>
+            <h4>{t('footer.reachUs')}</h4>
             <p><i className="fas fa-envelope"></i> support@smarthive.com</p>
             <p><i className="fas fa-phone"></i> 0673310066</p>
-            <p><i className="fas fa-map-marker-alt"></i> ورقلة، الجزائر</p>
+            <p><i className="fas fa-map-marker-alt"></i> {t('footer.location')}</p>
           </div>
         </div>
         
         <div className="footer-bottom">
-          <p>© 2026 Smart Hive. جميع الحقوق محفوظة</p>
+          <p>{t('footer.copyright')}</p>
           <div className="footer-hex"></div>
         </div>
       </div>

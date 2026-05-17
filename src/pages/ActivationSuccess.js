@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './ActivationSuccess.css';
 
 function ActivationSuccess() {
   const navigate = useNavigate();
   const location = useLocation();
-  const userName = location.state?.userName || 'نحال';
+  const { t } = useTranslation();
+  const userName = location.state?.userName || t('activationSuccess.defaultName');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,11 +22,11 @@ function ActivationSuccess() {
         <div className="success-icon">
           <i className="fas fa-check-circle"></i>
         </div>
-        <h1 className="text-gradient">تم تفعيل حسابك بنجاح!</h1>
-        <p className="welcome-text">مرحباً بك <span>{userName}</span> في فضاء النحال 🎉</p>
-        <p className="redirect-text">جاري تحويلك إلى لوحة التحكم...</p>
+        <h1 className="text-gradient">{t('activationSuccess.title')}</h1>
+        <p className="welcome-text">{t('activationSuccess.welcome', { name: userName })}</p>
+        <p className="redirect-text">{t('activationSuccess.redirect')}</p>
         <button className="btn-gold" onClick={() => navigate('/dashboard')}>
-          <i className="fas fa-arrow-left"></i> دخول إلى لوحة التحكم
+          <i className="fas fa-arrow-left"></i> {t('activationSuccess.goToDashboard')}
         </button>
       </div>
     </div>

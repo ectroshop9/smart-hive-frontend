@@ -10,7 +10,6 @@ import { ToastContainer, useToast } from './components/Toast';
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
 import Store from './pages/Store';
-import Updates from './pages/Updates';
 import Activate from './pages/Activate';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
@@ -41,7 +40,6 @@ function AppContent() {
             <Route path="/" element={<Home />} />
             <Route path="/store" element={<Store />} />
             <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/updates" element={<Updates />} />
             <Route path="/activate" element={<Activate />} />
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

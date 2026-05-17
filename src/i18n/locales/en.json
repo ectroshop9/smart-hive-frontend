@@ -1,0 +1,437 @@
+{
+  "nav": {
+    "home": "Home",
+    "store": "Store",
+    "os": "OS",
+    "register": "Register",
+    "login": "Login",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "logout": "Sign Out",
+    "language": "العربية"
+  },
+  "hero": {
+    "scrollDown": "Discover Our Story"
+  },
+  "problem": {
+    "title": "🐝 The Beekeeping Crisis in Algeria",
+    "subtitle": "Real problems beekeepers face daily — the numbers speak for themselves",
+    "beesDying": {
+      "title": "Mysterious Bee Deaths",
+      "desc": "Bee colonies suffer from diseases like Varroa and Nosema without early detection, leading to mass die-offs and catastrophic losses",
+      "stat": "40% annual colony loss rate"
+    },
+    "honeyDrop": {
+      "title": "Declining Honey Production",
+      "desc": "Without precise monitoring of hive conditions, honey production drops significantly due to disease, poor nutrition, and heat stress",
+      "stat": "-35% production decline"
+    },
+    "energy": {
+      "title": "Power Problem in Apiaries",
+      "desc": "Most apiaries are in remote areas without electricity, making hive monitoring impossible without a sustainable power solution",
+      "stat": "80% of apiaries lack electricity"
+    }
+  },
+  "story": {
+    "title": "Why SMART HIVE?",
+    "description": "Traditional beekeepers struggle with long distances between apiaries, spending hours daily traveling to inspect hives. With Smart Hive, you can monitor all your hives from your phone, right from home. Save time and effort, and focus on what truly matters — producing high-quality honey.",
+    "points": [
+      "Monitor all hives from one place",
+      "Instant alerts for any issues",
+      "Save 90% of travel time between apiaries"
+    ]
+  },
+  "sensors": {
+    "title": "📊 Monitoring Indicators",
+    "subtitle": "15 sensors in one device",
+    "groups": {
+      "climate": {
+        "title": "🌡️ Climate Sensors (7)",
+        "desc": "Temperature (3 types) — Humidity — CO₂ — Light — UV"
+      },
+      "monitoring": {
+        "title": "🔊 Monitoring Sensors (3)",
+        "desc": "Sound — Vibration — Motion"
+      },
+      "production": {
+        "title": "⚖️ Production Sensors (2)",
+        "desc": "Scale — Bee Counter"
+      },
+      "system": {
+        "title": "🔋 System Sensors (1)",
+        "desc": "Battery Sensor"
+      }
+    }
+  },
+  "energy": {
+    "title": "☀️ Smart Power System",
+    "subtitle": "Two integrated power methods — one device for all conditions",
+    "solar": {
+      "title": "Solar Panel",
+      "desc": "Clean, sustainable energy charging the device all day long"
+    },
+    "deepsleep": {
+      "title": "Deep Sleep",
+      "desc": "Device sleeps 99.9% of the time — wakes, reads, transmits, sleeps again — massive power savings",
+      "months": "months without sun"
+    },
+    "poe": {
+      "title": "48V Power",
+      "desc": "Single cable power for nearby apiaries — simple and efficient"
+    }
+  },
+  "mesh": {
+    "title": "Smart Mesh Network",
+    "subtitle": "How do the devices connect to each other?",
+    "description": "The Master connects to Slaves via a local Mesh network, and data reaches your phone through WiFi.",
+    "range": "Per-device range",
+    "totalRange": "Total network coverage"
+  },
+  "ai": {
+    "title": "🧠 Artificial Intelligence",
+    "subtitle": "Diagnose diseases before you see them",
+    "diseases": {
+      "title": "Diagnoses 4 Diseases",
+      "list": [
+        "Varroa Mites",
+        "Nosema",
+        "Foulbrood",
+        "Colony Collapse Disorder (CCD)"
+      ]
+    },
+    "nvidia": "NVIDIA NeMo Ready",
+    "nvidiaDesc": "AI system ready for NVIDIA NeMo upgrade for 99% diagnostic accuracy upon funding"
+  },
+  "security": {
+    "title": "🔐 Advanced Security",
+    "subtitle": "Your hive data is protected with the strongest technologies",
+    "items": {
+      "aes": { "title": "AES-256", "desc": "Encryption for all transmitted and stored data" },
+      "ecdsa": { "title": "ECDSA", "desc": "Digital signature prevents forgery" },
+      "rolling": { "title": "Rolling Code", "desc": "Key changes every session — even if signal is intercepted" },
+      "ssl": { "title": "SSL Pinning", "desc": "Completely prevents server spoofing" }
+    }
+  },
+  "vault": {
+    "title": "📜 Digital Certificate of Origin",
+    "subtitle": "First system in Algeria to certify honey with encryption technology",
+    "features": [
+      "Precise production date",
+      "Unique device ID (MAC-Lock)",
+      "Bee and flower type",
+      "Temperature and humidity records",
+      "Honey weight produced",
+      "Tamper-proof"
+    ]
+  },
+  "queen": {
+    "title": "👑 Queen Rearing",
+    "subtitle": "Precision monitoring 24/7 for queen breeding",
+    "monitoring": "Continuous Monitoring",
+    "monitoringDesc": "Precision sensors monitor the incubator 24 hours without interruption",
+    "precision": "High Precision",
+    "precisionDesc": "3 temperature sensors with 0.1°C accuracy for optimal queen rearing conditions",
+    "alerts": "Instant Alerts",
+    "alertsDesc": "Immediate alert if temperature or humidity changes — before the queen is affected"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "myHive": "My Hive",
+    "certificates": "Certificates",
+    "myDevices": "My Devices",
+    "alerts": "Alerts",
+    "profile": "Profile",
+    "role": "Beekeeper",
+    "logout": "Sign Out"
+  },
+  "footer": {
+    "tagline": "Smart system for monitoring and managing beehives remotely",
+    "support": "Support",
+    "contact": "Contact Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "reachUs": "Reach Us",
+    "location": "Ouargla, Algeria",
+    "copyright": "© 2026 Smart Hive. All rights reserved"
+  },
+  "login": {
+    "title": "Sign In",
+    "subtitle": "Welcome back to Smart Hive",
+    "email": "Email Address",
+    "emailPlaceholder": "example@email.com",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgot": "Forgot password?",
+    "button": "Sign In",
+    "loading": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "register": "Register",
+    "success": "Logged in successfully!",
+    "errors": {
+      "email": "Email is required",
+      "password": "Password is required",
+      "invalid": "Invalid email or password",
+      "failed": "Login failed",
+      "server": "Connection to server failed"
+    }
+  },
+  "activate": {
+    "title": "Register",
+    "subtitle": "Enter the serial key that came with your device",
+    "serial": "Serial Key",
+    "name": "Full Name",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "password": "Password",
+    "passwordConfirm": "Confirm Password",
+    "address": "Shipping Address (optional)",
+    "checking": "Checking...",
+    "button": "Register",
+    "loading": "Registering...",
+    "hasAccount": "Already have an account?",
+    "login": "Sign In",
+    "errors": {
+      "serialFormat": "Serial format: SMART-XXXX-XXXX",
+      "phoneLength": "Phone number must be 10 digits",
+      "emailInvalid": "Invalid email address",
+      "emailUsed": "This email is already registered",
+      "passwordMatch": "Passwords do not match",
+      "invalidKey": "Invalid activation code",
+      "server": "Connection to server failed"
+    }
+  },
+  "welcome": {
+    "title": "Account Activated Successfully!",
+    "message": "Welcome to the Beekeepers Space, {{name}}",
+    "subtitle": "🐝 Smart Hive - Smart Beekeepers Community",
+    "redirect": "You will be redirected to dashboard in {{count}} seconds...",
+    "goNow": "Go Now",
+    "defaultName": "Beekeeper"
+  },
+  "activationSuccess": {
+    "title": "Account Activated Successfully!",
+    "welcome": "Welcome {{name}} to the Beekeeper Space 🎉",
+    "redirect": "Redirecting you to dashboard...",
+    "goToDashboard": "Go to Dashboard",
+    "defaultName": "Beekeeper"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "subtitle": "Enter your email and we'll send you a password reset link",
+    "email": "Email Address",
+    "send": "Send Reset Link",
+    "sending": "Sending...",
+    "sent": "Sent!",
+    "sentMessage": "A password reset link has been sent to your email.",
+    "backToLogin": "Back to Login",
+    "errors": {
+      "emailRequired": "Email is required",
+      "failed": "Failed to send password reset link",
+      "server": "Connection to server failed"
+    }
+  },
+  "store": {
+    "loading": "Loading products...",
+    "currency": "DZD",
+    "orderNow": "Order Now",
+    "categories": {
+      "all": "All",
+      "sensors": "Sensors",
+      "boards": "Boards",
+      "cables": "Cables",
+      "accessories": "Accessories"
+    }
+  },
+  "product": {
+    "title": "Master & Slave",
+    "subtitle": "Smart devices for beehive monitoring",
+    "buyNow": "Buy Now",
+    "featuresTitle": "Features",
+    "master": {
+      "title": "Master Device",
+      "label": "Master",
+      "desc": "Main control unit. Connects to the internet and receives data from all slaves. Equipped with LCD screen, WiFi and Mesh.",
+      "specs": ["ESP32-S3 Processor", "3.5\" TFT Screen", "WiFi + Bluetooth", "Supports up to 10 Slaves", "OTA Updates"]
+    },
+    "slave": {
+      "title": "Slave Device",
+      "label": "Slave",
+      "desc": "Monitoring unit placed inside the hive. Measures temperature, humidity, weight, sound, and sends to master.",
+      "specs": ["15 Built-in Sensors", "6-Month Battery Life", "Auto Deep Sleep", "Water & Dust Resistant", "OTA Updates via Master"]
+    },
+    "features": {
+      "mesh": { "title": "Mesh Connection", "desc": "Strong local network without internet" },
+      "chip": { "title": "ESP32-S3 Processor", "desc": "High performance, low consumption" },
+      "battery": { "title": "Long Battery Life", "desc": "Automatic deep sleep to save power" },
+      "ota": { "title": "OTA Updates", "desc": "Remote update without opening the device" },
+      "security": { "title": "Data Encryption", "desc": "Complete protection for your data" },
+      "ai": { "title": "Artificial Intelligence", "desc": "Data analysis and smart predictions" }
+    }
+  },
+  "productDetail": {
+    "loading": "Loading...",
+    "notFound": "Product not found",
+    "backToStore": "Back to Store",
+    "currency": "DZD",
+    "inStock": "in stock",
+    "freeShipping": "Free shipping to all states",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "selectWilaya": "Select Wilaya",
+    "selectCommune": "Select Commune",
+    "address": "Detailed Address (optional)",
+    "quantity": "Quantity",
+    "productPrice": "Product Price",
+    "shipping": "Shipping",
+    "free": "Free",
+    "total": "Total",
+    "orderNow": "Order Now",
+    "submitting": "Submitting...",
+    "cod": "Cash on Delivery",
+    "orderSuccess": "Order Received Successfully!",
+    "thankYou": "Thank you {{name}}, we will contact you soon",
+    "errors": {
+      "phone": "Invalid phone number. Must start with 05, 06 or 07 and be 10 digits",
+      "orderFailed": "Order creation failed",
+      "connection": "Connection failed"
+    }
+  },
+  "dashboard": {
+    "overview": "Dashboard",
+    "loading": "Loading Dashboard",
+    "pleaseWait": "Please wait...",
+    "loadingStats": "Loading statistics...",
+    "lastUpdate": "Last update",
+    "totalHives": "Total Hives",
+    "activeDevices": "Connected Devices",
+    "avgTemp": "Average Temperature",
+    "avgHumidity": "Average Humidity",
+    "avgWeight": "Average Weight",
+    "co2": "CO2 Level",
+    "sound": "Sound Level",
+    "vibration": "Vibration",
+    "light": "Light Level",
+    "uv": "UV Level",
+    "battery": "Battery",
+    "signal": "Signal Strength",
+    "alerts": "Alerts",
+    "checkingAlerts": "Checking alerts...",
+    "highTemp": "🌡️ High Temperature",
+    "lowHumidity": "💧 Low Humidity",
+    "lowBattery": "🔋 Low Battery",
+    "highCO2": "🫁 High CO2",
+    "highVibration": "📳 Abnormal Vibration",
+    "allNormal": "✅ All indicators normal"
+  },
+  "os": {
+    "title": "Smart Hive OS",
+    "subtitle": "See the real system from the inside",
+    "master": "Master Interface",
+    "slave": "Slave Interface"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdate": "Last updated: April 20, 2026",
+    "sections": {
+      "collect": {
+        "title": "1. Information We Collect",
+        "desc": "We collect the following information when you use Smart Hive:",
+        "items": ["Full name", "Email address", "Phone number", "Address (for shipping)", "Order and purchase data"]
+      },
+      "usage": {
+        "title": "2. How We Use Your Information",
+        "desc": "We use your information for the following purposes:",
+        "items": ["Processing your orders and delivering products", "Communicating with you about your orders", "Improving our services and products", "Sending updates and offers (with your consent)"]
+      },
+      "protection": {
+        "title": "3. Information Protection",
+        "desc": "We are committed to protecting your personal data through:",
+        "items": ["SSL encryption for all transmitted data", "Secure server storage", "No sharing with third parties without your consent"]
+      },
+      "cookies": {
+        "title": "4. Cookies",
+        "desc": "We use cookies to improve your experience on our site. You can disable them in your browser settings."
+      },
+      "rights": {
+        "title": "5. Your Rights",
+        "desc": "You have the right to:",
+        "items": ["Access your personal data", "Correct inaccurate data", "Request data deletion", "Object to data processing"]
+      },
+      "contact": {
+        "title": "6. Contact Us",
+        "desc": "If you have any questions about our privacy policy, please contact us:"
+      }
+    }
+  },
+  "terms": {
+    "title": "Terms of Use",
+    "lastUpdate": "Last updated: April 20, 2026",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of Terms",
+        "desc": "By using the Smart Hive website, you agree to be bound by these terms of use. If you do not agree, please do not use the site."
+      },
+      "usage": {
+        "title": "2. Site Usage",
+        "desc": "You agree to use the site for lawful purposes only. Prohibited:",
+        "items": ["Impersonating another person", "Uploading viruses or malicious code", "Attempting unauthorized access to our servers", "Using the site for any illegal purpose"]
+      },
+      "accounts": {
+        "title": "3. Accounts",
+        "desc": "When creating an account, you are responsible for:",
+        "items": ["Maintaining login confidentiality", "All activities under your account", "Notifying us immediately of unauthorized use"]
+      },
+      "orders": {
+        "title": "4. Products and Orders",
+        "desc": "We reserve the right to:",
+        "items": ["Refuse or cancel any order", "Modify product prices without notice", "Limit quantities of products sold"]
+      },
+      "ip": {
+        "title": "5. Intellectual Property",
+        "desc": "All content on Smart Hive (text, images, logos) is protected by intellectual property rights and may not be used without written permission."
+      },
+      "liability": {
+        "title": "6. Limitation of Liability",
+        "desc": "Smart Hive is not responsible for:",
+        "items": ["Any damages resulting from site use", "Service interruption beyond our control", "Any indirect losses"]
+      },
+      "law": {
+        "title": "7. Governing Law",
+        "desc": "These terms are governed by the laws of the People's Democratic Republic of Algeria. Any dispute is subject to the jurisdiction of Ouargla courts."
+      },
+      "modifications": {
+        "title": "8. Modifications",
+        "desc": "We reserve the right to modify these terms at any time. Continued use of the site constitutes acceptance of changes."
+      },
+      "contact": {
+        "title": "9. Contact Us",
+        "desc": "For questions about the terms of use:"
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We are here to answer your inquiries",
+    "call": "Call Us",
+    "hours": "Sat - Thu: 9 AM - 6 PM",
+    "email": "Email",
+    "reply": "We reply within 24 hours",
+    "whatsapp": "WhatsApp",
+    "instant": "Instant Support",
+    "location": "Our Location",
+    "city": "Ouargla, Algeria",
+    "hq": "Headquarters",
+    "name": "Full Name",
+    "namePlaceholder": "Ahmed the Beekeeper",
+    "emailLabel": "Email Address",
+    "phone": "Phone Number",
+    "subject": "Subject",
+    "subjectPlaceholder": "Message subject",
+    "message": "Message",
+    "messagePlaceholder": "Write your message here...",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "sent": "Sent Successfully",
+    "thanks": "Thank you for contacting us. We will get back to you soon."
+  }
+}

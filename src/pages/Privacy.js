@@ -1,68 +1,67 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './Privacy.css';
 
 function Privacy() {
+  const { t } = useTranslation();
+
   return (
     <div className="page-container hex-bg">
       <div className="container">
         <div className="page-header">
-          <h1 className="text-gradient">سياسة الخصوصية</h1>
-          <p className="page-subtitle">آخر تحديث: 20 أبريل 2026</p>
+          <h1 className="text-gradient">{t('privacy.title')}</h1>
+          <p className="page-subtitle">{t('privacy.lastUpdate')}</p>
         </div>
 
         <div className="policy-content">
           <section className="policy-section">
-            <h2>1. المعلومات التي نجمعها</h2>
-            <p>نقوم بجمع المعلومات التالية عند استخدامك لموقع Smart Hive:</p>
+            <h2>{t('privacy.sections.collect.title')}</h2>
+            <p>{t('privacy.sections.collect.desc')}</p>
             <ul>
-              <li>الاسم الكامل</li>
-              <li>البريد الإلكتروني</li>
-              <li>رقم الهاتف</li>
-              <li>العنوان (لأغراض الشحن)</li>
-              <li>بيانات الطلبات والمشتريات</li>
+              {t('privacy.sections.collect.items', { returnObjects: true }).map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
           </section>
 
           <section className="policy-section">
-            <h2>2. كيفية استخدام المعلومات</h2>
-            <p>نستخدم معلوماتك للأغراض التالية:</p>
+            <h2>{t('privacy.sections.usage.title')}</h2>
+            <p>{t('privacy.sections.usage.desc')}</p>
             <ul>
-              <li>معالجة طلباتك وتوصيل المنتجات</li>
-              <li>التواصل معك بخصوص طلباتك</li>
-              <li>تحسين خدماتنا ومنتجاتنا</li>
-              <li>إرسال تحديثات وعروض (بموافقتك)</li>
+              {t('privacy.sections.usage.items', { returnObjects: true }).map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
           </section>
 
           <section className="policy-section">
-            <h2>3. حماية المعلومات</h2>
-            <p>نحن نلتزم بحماية بياناتك الشخصية من خلال:</p>
+            <h2>{t('privacy.sections.protection.title')}</h2>
+            <p>{t('privacy.sections.protection.desc')}</p>
             <ul>
-              <li>استخدام تشفير SSL لجميع البيانات المرسلة</li>
-              <li>تخزين البيانات في خوادم آمنة</li>
-              <li>عدم مشاركة بياناتك مع أطراف ثالثة دون موافقتك</li>
+              {t('privacy.sections.protection.items', { returnObjects: true }).map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
           </section>
 
           <section className="policy-section">
-            <h2>4. ملفات تعريف الارتباط (Cookies)</h2>
-            <p>نستخدم ملفات تعريف الارتباط لتحسين تجربتك على موقعنا. يمكنك تعطيلها من إعدادات المتصفح.</p>
+            <h2>{t('privacy.sections.cookies.title')}</h2>
+            <p>{t('privacy.sections.cookies.desc')}</p>
           </section>
 
           <section className="policy-section">
-            <h2>5. حقوقك</h2>
-            <p>لديك الحق في:</p>
+            <h2>{t('privacy.sections.rights.title')}</h2>
+            <p>{t('privacy.sections.rights.desc')}</p>
             <ul>
-              <li>الوصول إلى بياناتك الشخصية</li>
-              <li>تصحيح أي بيانات غير دقيقة</li>
-              <li>طلب حذف بياناتك</li>
-              <li>الاعتراض على معالجة بياناتك</li>
+              {t('privacy.sections.rights.items', { returnObjects: true }).map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
           </section>
 
           <section className="policy-section">
-            <h2>6. اتصل بنا</h2>
-            <p>إذا كان لديك أي أسئلة حول سياسة الخصوصية، يرجى التواصل معنا:</p>
+            <h2>{t('privacy.sections.contact.title')}</h2>
+            <p>{t('privacy.sections.contact.desc')}</p>
             <p>📧 support@smarthive.com</p>
             <p>📞 0673310066</p>
           </section>

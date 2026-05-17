@@ -71,9 +71,53 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 }
 
+/* ========== أيقونة موحدة (دائرية - للثيم واللغة وتسجيل الدخول) ========== */
+.btn-icon-circle {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 193, 7, 0.25);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.btn-icon-circle:hover {
+  background: rgba(255, 193, 7, 0.1);
+  border-color: #FFC107;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+  transform: translateY(-2px);
+  color: #FFC107;
+}
+
+.btn-icon-circle span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #FF4D00;
+  color: #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  line-height: 1;
+}
+
+/* ========== زر التسجيل (مستطيل مع جراديان) ========== */
 .btn-activate {
   background: linear-gradient(135deg, #FF4D00, #FFC107);
   color: #fff;
@@ -94,24 +138,69 @@
   transform: translateX(-3px);
 }
 
+/* ========== زر تسجيل الدخول (دائري - نفس الموحد) ========== */
 .btn-login {
   width: 44px;
   height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #FF4D00, #FFC107);
-  border: 1px solid rgba(255, 193, 7, 0.3);
-  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 193, 7, 0.25);
+  border-radius: 50%;
   color: #fff;
   transition: all 0.3s ease;
 }
 
 .btn-login:hover {
-  background: linear-gradient(135deg, #FFC107, #FF4D00);
+  background: rgba(255, 193, 7, 0.1);
   border-color: #FFC107;
-  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
-  transform: translateX(-3px);
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+  transform: translateY(-2px);
+  color: #FFC107;
+}
+
+/* ========== زر اللغة (دائري - نفس الموحد) ========== */
+.btn-lang {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 193, 7, 0.25);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.btn-lang:hover {
+  background: rgba(255, 193, 7, 0.1);
+  border-color: #FFC107;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+  transform: translateY(-2px);
+  color: #FFC107;
+}
+
+.btn-lang span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #FF4D00;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  line-height: 1;
 }
 
 .btn-dashboard {
@@ -139,24 +228,32 @@
 }
 
 .btn-user {
-  background: transparent;
-  border: 1px solid rgba(255, 193, 7, 0.3);
-  color: var(--pure-white);
-  padding: 10px 15px;
-  border-radius: 14px;
-  cursor: pointer;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 1rem;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 193, 7, 0.25);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.2rem;
   position: relative;
   z-index: 10001;
   transition: all 0.3s ease;
 }
 
 .btn-user:hover {
+  background: rgba(255, 193, 7, 0.1);
   border-color: #FFC107;
-  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.15);
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+  transform: translateY(-2px);
+  color: #FFC107;
+}
+
+.btn-user span {
+  display: none;
 }
 
 .user-dropdown {
@@ -197,7 +294,17 @@
   .nav-menu { display: none; }
   .logo-text { font-size: 18px; }
   .logo-image { width: 45px; height: 45px; }
-  .btn-activate span, .btn-dashboard span, .btn-user span { display: none; }
+  .btn-activate span, .btn-dashboard span { display: none; }
+  .header-actions { gap: 8px; }
+  
+  .btn-icon-circle,
+  .btn-lang,
+  .btn-login,
+  .btn-user {
+    width: 38px;
+    height: 38px;
+    font-size: 0.95rem;
+  }
 }
 
 [data-theme="light"] .header {
@@ -206,3 +313,21 @@
 }
 [data-theme="light"] .nav-link { color: var(--text-primary); }
 [data-theme="light"] .nav-link:hover { color: #FF4D00; }
+
+[data-theme="light"] .btn-icon-circle,
+[data-theme="light"] .btn-lang,
+[data-theme="light"] .btn-login,
+[data-theme="light"] .btn-user {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(255, 77, 0, 0.2);
+  color: #333;
+}
+
+[data-theme="light"] .btn-icon-circle:hover,
+[data-theme="light"] .btn-lang:hover,
+[data-theme="light"] .btn-login:hover,
+[data-theme="light"] .btn-user:hover {
+  background: rgba(255, 77, 0, 0.08);
+  border-color: #FF4D00;
+  color: #FF4D00;
+}

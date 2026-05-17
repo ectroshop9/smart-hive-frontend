@@ -1,103 +1,44 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './Home.css';
 
-
-
 function Home() {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState('intro');
   const [showCTA, setShowCTA] = useState(false);
-  const [orderStep, setOrderStep] = useState(1);
-  const [orderData, setOrderData] = useState({ hives: '', beeType: '', location: '', name: '', phone: '', email: '' });
-  const [orderErrors, setOrderErrors] = useState({});
   const heroRef = useRef(null);
   const storyRef = useRef(null);
 
-  useEffect(() => { AOS.init({ duration: 800, once: true, offset: 100 }); }, []);
-
-  const validatePhone = (phone) => /^(05|06|07)[0-9]{8}$/.test(phone);
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true, offset: 100 });
+    document.documentElement.lang = 'ar';
+    document.documentElement.dir = 'rtl';
+  }, []);
 
   const handleIntroEnded = () => {
     setPhase('hero');
-    setTimeout(() => { if (heroRef.current) heroRef.current.play(); setShowCTA(true); }, 150);
+    setTimeout(() => {
+      if (heroRef.current) {
+        heroRef.current.play().catch(() => {});
+      }
+      setShowCTA(true);
+    }, 150);
   };
 
   const scrollToStory = () => storyRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-  const handleOrderChange = (e) => {
-    setOrderData({ ...orderData, [e.target.name]: e.target.value });
-    if (orderErrors[e.target.name]) setOrderErrors({ ...orderErrors, [e.target.name]: '' });
-  };
-
-  const validateOrderStep = (step) => {
-    const errors = {};
-    if (step === 1) { if (!orderData.hives) errors.hives = 'اختر عدد الخلايا'; if (!orderData.beeType) errors.beeType = 'اختر نوع النحل'; }
-    else if (step === 2) { if (!orderData.location.trim()) errors.location = 'الموقع مطلوب'; }
-    else if (step === 3) {
-      if (!orderData.name.trim()) errors.name = 'الاسم مطلوب';
-      if (!validatePhone(orderData.phone)) errors.phone = 'رقم هاتف جزائري غير صالح';
-      if (!validateEmail(orderData.email)) errors.email = 'بريد إلكتروني غير صالح';
-    }
-    setOrderErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const nextStep = () => { if (validateOrderStep(orderStep)) setOrderStep(orderStep + 1); };
-  const prevStep = () => setOrderStep(orderStep - 1);
-
-  const handleOrderSubmit = (e) => {
-    e.preventDefault();
-    if (!validateOrderStep(3)) return;
-    alert('✅ تم استلام طلبك! سنتواصل معك قريباً.');
-    setOrderData({ hives: '', beeType: '', location: '', name: '', phone: '', email: '' });
-    setOrderStep(1);
-  };
-
   const sensorGroups = [
-    {
-      icon: 'temperature-high',
-      title: '🌡️ حساسات المناخ (7)',
-      desc: 'حرارة (3 أنواع) - رطوبة - ثاني أكسيد الكربون - ضوء - أشعة فوق بنفسجية',
-    },
-    {
-      icon: 'ear-listen',
-      title: '🔊 حساسات المراقبة (3)',
-      desc: 'صوت - اهتزاز - حركة',
-    },
-    {
-      icon: 'weight-scale',
-      title: '⚖️ حساسات الإنتاج (2)',
-      desc: 'ميزان - عداد النحل',
-    },
-    {
-      icon: 'battery-full',
-      title: '🔋 حساسات النظام (1)',
-      desc: 'حساس البطارية',
-    },
-  ];
-
-  const features = [
-    { icon: 'wifi', title: 'اتصال Mesh محلي', desc: 'شبكة قوية بين الأجهزة بدون إنترنت' },
-    { icon: 'cloud-upload-alt', title: 'تحديثات OTA', desc: 'تحديث عن بعد بدون فتح الجهاز' },
-    { icon: 'brain', title: 'ذكاء اصطناعي', desc: 'تحليل البيانات وتنبؤات ذكية' },
-    { icon: 'shield-alt', title: 'تشفير كامل', desc: 'حماية بياناتك من الاختراق' },
-    { icon: 'battery-full', title: 'بطارية طويلة', desc: 'تدوم حتى 6 أشهر مع النوم العميق' },
-    { icon: 'mobile-alt', title: 'تطبيق جوال', desc: 'تابع خلاياك من أي مكان' },
-  ];
-
-  
-
-  const warrantyItems = [
-    { icon: 'shield-alt', title: 'ضمان شامل', desc: 'سنتين على جميع المكونات' },
-    { icon: 'file-contract', title: 'ترخيص رسمي', desc: 'منتج مسجل ومعتمد قانونياً' },
-    { icon: 'headset', title: 'دعم فني 24/7', desc: 'فريق متخصص للرد على استفساراتك' },
-    { icon: 'undo-alt', title: 'استرجاع 30 يوم', desc: 'ضمان استرجاع كامل للمبلغ' },
+    { icon: 'temperature-high', title: t('sensors.groups.climate.title'), desc: t('sensors.groups.climate.desc') },
+    { icon: 'ear-listen', title: t('sensors.groups.monitoring.title'), desc: t('sensors.groups.monitoring.desc') },
+    { icon: 'weight-scale', title: t('sensors.groups.production.title'), desc: t('sensors.groups.production.desc') },
+    { icon: 'battery-full', title: t('sensors.groups.system.title'), desc: t('sensors.groups.system.desc') },
   ];
 
   return (
     <div className="landing-page">
+      {/* ========== 1. HERO ========== */}
       <section className="hero-video">
         {phase === 'intro' && (
           <video className="hero-video-bg" poster="/images/hero-poster.jpg" autoPlay muted playsInline preload="auto" onEnded={handleIntroEnded}>
@@ -111,37 +52,63 @@ function Home() {
         )}
         <div className="hero-video-overlay"></div>
         {showCTA && (
-          <div className="scroll-indicator" onClick={scrollToStory} title="اكتشف قصتنا">
+          <div className="scroll-indicator" onClick={scrollToStory} title={t('hero.scrollDown')}>
             <i className="fas fa-chevron-down"></i>
           </div>
         )}
       </section>
 
-      <section className="story-section hex-bg" ref={storyRef}>
+      {/* ========== 2. المشكلة ========== */}
+      <section className="problem-section" ref={storyRef}>
+        <div className="container">
+          <h2 className="section-title text-center" data-aos="fade-up">{t('problem.title')}</h2>
+          <p className="section-subtitle text-center" data-aos="fade-up">{t('problem.subtitle')}</p>
+          <div className="problem-grid">
+            {[
+              { key: 'beesDying', icon: 'skull', color: '#ff4d4d' },
+              { key: 'honeyDrop', icon: 'chart-line-down', color: '#ffc107' },
+              { key: 'energy', icon: 'bolt', color: '#ff9800' }
+            ].map((p, i) => (
+              <div key={p.key} className="problem-card" data-aos="fade-up" data-aos-delay={i * 100}>
+                <div className="problem-icon" style={{ background: `${p.color}20`, color: p.color }}>
+                  <i className={`fas fa-${p.icon}`}></i>
+                </div>
+                <h3>{t(`problem.${p.key}.title`)}</h3>
+                <p>{t(`problem.${p.key}.desc`)}</p>
+                <div className="problem-stat">
+                  <span className="stat-number">{t(`problem.${p.key}.stat`)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========== 3. لماذا Smart Hive ========== */}
+      <section className="story-section hex-bg">
         <div className="container">
           <div className="story-grid">
             <div className="story-image" data-aos="fade-right">
-              <img src="/story.png" alt="النحال في المنحل" style={{ width: '100%', borderRadius: 16 }} />
+              <img src="/story.png" alt="Beekeeper" style={{ width: '100%', borderRadius: 16 }} />
             </div>
             <div className="story-content" data-aos="fade-left">
-              <h2 className="section-title">لماذا SMART HIVE؟</h2>
-              <p className="story-text">النحال التقليدي يعاني من المسافات الطويلة بين المناحل، ويقضي ساعات يومياً في التنقل لمراقبة الخلايا. مع Smart Hive، يمكنك مراقبة كل خلاياك من هاتفك وأنت في منزلك. وفر وقتك وجهدك، وركز على ما يهم حقاً - إنتاج عسل عالي الجودة.</p>
+              <h2 className="section-title">{t('story.title')}</h2>
+              <p className="story-text">{t('story.description')}</p>
               <ul className="story-points">
-                <li><i className="fas fa-check-circle"></i> مراقبة جميع الخلايا من مكان واحد</li>
-                <li><i className="fas fa-check-circle"></i> تنبيهات فورية عند أي مشكلة</li>
-                <li><i className="fas fa-check-circle"></i> توفير 90% من وقت التنقل بين المناحل</li>
+                {t('story.points', { returnObjects: true }).map((point, i) => (
+                  <li key={i}><i className="fas fa-check-circle"></i> {point}</li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
       </section>
 
-      
-
+      {/* ========== 4. 15 حساس ========== */}
       <section className="sensors-section hex-bg">
         <div className="container">
-          <h2 className="section-title" data-aos="fade-up">📊 مؤشرات المراقبة</h2>
-          <p className="section-subtitle text-center" data-aos="fade-up">15 حساس في جهاز واحد</p>
+          <h2 className="section-title" data-aos="fade-up">{t('sensors.title')}</h2>
+          <p className="section-subtitle text-center" data-aos="fade-up">{t('sensors.subtitle')}</p>
           <div className="features-list">
             {sensorGroups.map((group, i) => (
               <div key={i} className="feature-row" data-aos="fade-up" data-aos-delay={i * 100}>
@@ -153,121 +120,151 @@ function Home() {
               </div>
             ))}
           </div>
+          <div className="sensors-image" data-aos="zoom-in" style={{ marginTop: 40, textAlign: 'center' }}>
+            <img src="/images/sensors-diagram.png" alt="15 Sensors" style={{ maxWidth: '100%', borderRadius: 16 }} />
+          </div>
         </div>
       </section>
 
+      {/* ========== 5. الطاقة الشمسية + Deep Sleep ========== */}
+      <section className="energy-section">
+        <div className="container">
+          <h2 className="section-title" data-aos="fade-up">{t('energy.title')}</h2>
+          <p className="section-subtitle text-center" data-aos="fade-up">{t('energy.subtitle')}</p>
+          <div className="energy-grid">
+            <div className="energy-card" data-aos="fade-up">
+              <div className="energy-icon"><i className="fas fa-solar-panel"></i></div>
+              <h3>{t('energy.solar.title')}</h3>
+              <p>{t('energy.solar.desc')}</p>
+            </div>
+            <div className="energy-card" data-aos="fade-up" data-aos-delay="100">
+              <div className="energy-icon"><i className="fas fa-moon"></i></div>
+              <h3>{t('energy.deepsleep.title')}</h3>
+              <p>{t('energy.deepsleep.desc')}</p>
+              <div className="energy-stat">6 {t('energy.deepsleep.months')}</div>
+            </div>
+            <div className="energy-card" data-aos="fade-up" data-aos-delay="200">
+              <div className="energy-icon"><i className="fas fa-plug"></i></div>
+              <h3>{t('energy.poe.title')}</h3>
+              <p>{t('energy.poe.desc')}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========== 6. Mesh ========== */}
       <section className="mesh-section">
         <div className="container">
-          <h2 className="section-title" data-aos="fade-up">شبكة Mesh الذكية</h2>
-          <p className="section-subtitle text-center" data-aos="fade-up">كيف تتصل الأجهزة ببعضها البعض؟</p>
+          <h2 className="section-title" data-aos="fade-up">{t('mesh.title')}</h2>
+          <p className="section-subtitle text-center" data-aos="fade-up">{t('mesh.subtitle')}</p>
           <div className="mesh-diagram" data-aos="zoom-in">
-            <img src="/mesh-network.png" alt="شبكة Mesh" style={{ maxWidth: '100%', borderRadius: 16 }} />
+            <img src="/mesh-network.png" alt="Mesh Network" style={{ maxWidth: '100%', borderRadius: 16 }} />
           </div>
-          <div className="mesh-info" data-aos="fade-up"><p>الماستر يتصل بالسلايفات عبر شبكة Mesh محلية، وتصل البيانات إلى هاتفك عبر WiFi.</p></div>
+          <div className="mesh-stats" data-aos="fade-up">
+            <div className="mesh-stat-item">
+              <span className="mesh-stat-number">300m</span>
+              <span>{t('mesh.range')}</span>
+            </div>
+            <div className="mesh-stat-item">
+              <span className="mesh-stat-number">1.5km</span>
+              <span>{t('mesh.totalRange')}</span>
+            </div>
+          </div>
+          <div className="mesh-info" data-aos="fade-up">
+            <p>{t('mesh.description')}</p>
+          </div>
         </div>
       </section>
 
-      <section className="features-alt">
+      {/* ========== 7. الذكاء الاصطناعي ========== */}
+      <section className="ai-section hex-bg">
         <div className="container">
-          <h2 className="section-title" data-aos="fade-up">مميزات النظام</h2>
-          <div className="features-list">
-            {features.map((f, i) => (
-              <div key={i} className="feature-row" data-aos="fade-up" data-aos-delay={i * 100}>
-                <div className="feature-row-icon"><i className={`fas fa-${f.icon}`}></i></div>
-                <div className="feature-row-text"><h3>{f.title}</h3><p>{f.desc}</p></div>
+          <h2 className="section-title" data-aos="fade-up">{t('ai.title')}</h2>
+          <p className="section-subtitle text-center" data-aos="fade-up">{t('ai.subtitle')}</p>
+          <div className="ai-grid">
+            <div className="ai-diseases" data-aos="fade-right">
+              <h3>{t('ai.diseases.title')}</h3>
+              <ul className="ai-disease-list">
+                {t('ai.diseases.list', { returnObjects: true }).map((d, i) => (
+                  <li key={i}><i className="fas fa-virus"></i> {d}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="ai-nvidia" data-aos="fade-left">
+              <div className="ai-nvidia-badge">
+                <i className="fas fa-microchip"></i>
+                <span>{t('ai.nvidia')}</span>
+              </div>
+              <p>{t('ai.nvidiaDesc')}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========== 8. الأمان ========== */}
+      <section className="security-section hex-bg">
+        <div className="container">
+          <h2 className="section-title" data-aos="fade-up">{t('security.title')}</h2>
+          <p className="section-subtitle text-center" data-aos="fade-up">{t('security.subtitle')}</p>
+          <div className="security-grid">
+            {['aes', 'ecdsa', 'rolling', 'ssl'].map((s, i) => (
+              <div key={s} className="security-card" data-aos="fade-up" data-aos-delay={i * 100}>
+                <div className="security-icon"><i className="fas fa-lock"></i></div>
+                <h3>{t(`security.items.${s}.title`)}</h3>
+                <p>{t(`security.items.${s}.desc`)}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="warranty-section hex-bg">
+      {/* ========== 9. وثيقة المنشأ الرقمية ========== */}
+      <section className="vault-section">
         <div className="container">
-          <h2 className="section-title" data-aos="fade-up">ضمان وأمان</h2>
-          <p className="section-subtitle text-center" data-aos="fade-up">نحن نضمن لك راحة البال</p>
-          <div className="warranty-strip">
-            {warrantyItems.map((item, i) => (
-              <div key={i} className="warranty-strip-item" data-aos="fade-up" data-aos-delay={i * 100}>
-                <div className="warranty-strip-icon"><i className={`fas fa-${item.icon}`}></i></div>
-                <div className="warranty-strip-text"><h3>{item.title}</h3><p>{item.desc}</p></div>
-              </div>
-            ))}
+          <h2 className="section-title" data-aos="fade-up">{t('vault.title')}</h2>
+          <p className="section-subtitle text-center" data-aos="fade-up">{t('vault.subtitle')}</p>
+          <div className="vault-content">
+            <div className="vault-image" data-aos="fade-right">
+              <img src="/images/certificate-preview.png" alt="Digital Certificate" style={{ maxWidth: '100%', borderRadius: 16 }} />
+            </div>
+            <div className="vault-features" data-aos="fade-left">
+              {t('vault.features', { returnObjects: true }).map((f, i) => (
+                <div key={i} className="vault-feature-item">
+                  <i className="fas fa-check-circle"></i>
+                  <span>{f}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="smart-order-section">
+      {/* ========== 10. تربية الملكات ========== */}
+      <section className="queen-section hex-bg">
         <div className="container">
-          <h2 className="section-title" data-aos="fade-up">اطلب جهازك الآن</h2>
-          <p className="section-subtitle text-center" data-aos="fade-up">أجب عن الأسئلة التالية وسنرسل لك عرض السعر المناسب</p>
-          <div className="features-list">
-            <div className="feature-row" data-aos="fade-up">
-              <div className="feature-row-icon"><span style={{fontSize:'1.5rem',fontWeight:'bold'}}>1</span></div>
-              <div className="feature-row-text">
-                <h3>معلومات عن المنحل</h3>
-                {orderStep >= 1 && (
-                  <div style={{marginTop:15}}>
-                    <select name="hives" value={orderData.hives} onChange={handleOrderChange} className="order-select">
-                      <option value="">كم خلية لديك؟</option>
-                      <option value="1-5">1 - 5 خلايا</option>
-                      <option value="5-10">5 - 10 خلايا</option>
-                      <option value="10-20">10 - 20 خلية</option>
-                      <option value="20+">أكثر من 20 خلية</option>
-                    </select>
-                    {orderErrors.hives && <span className="error-message">{orderErrors.hives}</span>}
-                    <select name="beeType" value={orderData.beeType} onChange={handleOrderChange} className="order-select">
-                      <option value="">نوع النحل</option>
-                      <option value="local">نحل محلي</option>
-                      <option value="italian">نحل إيطالي</option>
-                      <option value="carniolan">نحل كارنيولي</option>
-                    </select>
-                    {orderErrors.beeType && <span className="error-message">{orderErrors.beeType}</span>}
-                  </div>
-                )}
-              </div>
+          <h2 className="section-title" data-aos="fade-up">{t('queen.title')}</h2>
+          <p className="section-subtitle text-center" data-aos="fade-up">{t('queen.subtitle')}</p>
+          <div className="queen-grid">
+            <div className="queen-card" data-aos="fade-up">
+              <i className="fas fa-crown"></i>
+              <h3>{t('queen.monitoring')}</h3>
+              <p>{t('queen.monitoringDesc')}</p>
             </div>
-
-            <div className="feature-row" data-aos="fade-up" data-aos-delay="100">
-              <div className="feature-row-icon"><span style={{fontSize:'1.5rem',fontWeight:'bold'}}>2</span></div>
-              <div className="feature-row-text">
-                <h3>معلومات الموقع</h3>
-                {orderStep >= 2 && (
-                  <div style={{marginTop:15}}>
-                    <input type="text" name="location" placeholder="موقع المنحل (المدينة/المنطقة)" value={orderData.location} onChange={handleOrderChange} className="order-input" />
-                    {orderErrors.location && <span className="error-message">{orderErrors.location}</span>}
-                  </div>
-                )}
-              </div>
+            <div className="queen-card" data-aos="fade-up" data-aos-delay="100">
+              <i className="fas fa-temperature-high"></i>
+              <h3>{t('queen.precision')}</h3>
+              <p>{t('queen.precisionDesc')}</p>
             </div>
-
-            <div className="feature-row" data-aos="fade-up" data-aos-delay="200">
-              <div className="feature-row-icon"><span style={{fontSize:'1.5rem',fontWeight:'bold'}}>3</span></div>
-              <div className="feature-row-text">
-                <h3>معلومات التواصل</h3>
-                {orderStep >= 3 && (
-                  <div style={{marginTop:15}}>
-                    <input type="text" name="name" placeholder="الاسم الكامل" value={orderData.name} onChange={handleOrderChange} className="order-input" />
-                    {orderErrors.name && <span className="error-message">{orderErrors.name}</span>}
-                    <input type="tel" name="phone" placeholder="رقم الهاتف (05xxxxxxxx)" value={orderData.phone} onChange={handleOrderChange} className="order-input" />
-                    {orderErrors.phone && <span className="error-message">{orderErrors.phone}</span>}
-                    <input type="email" name="email" placeholder="البريد الإلكتروني" value={orderData.email} onChange={handleOrderChange} className="order-input" />
-                    {orderErrors.email && <span className="error-message">{orderErrors.email}</span>}
-                  </div>
-                )}
-              </div>
+            <div className="queen-card" data-aos="fade-up" data-aos-delay="200">
+              <i className="fas fa-bell"></i>
+              <h3>{t('queen.alerts')}</h3>
+              <p>{t('queen.alertsDesc')}</p>
             </div>
-          </div>
-
-          <div className="text-center" style={{marginTop:30}}>
-            {orderStep > 1 && <button className="btn-outline" onClick={prevStep} style={{marginRight:10}}>السابق</button>}
-            {orderStep < 3 ? (
-              <button className="btn-gold" onClick={nextStep}>التالي</button>
-            ) : (
-              <button className="btn-gold" onClick={handleOrderSubmit}>🚀 اطلب العرض الآن</button>
-            )}
           </div>
         </div>
       </section>
+
+     
     </div>
   );
 }

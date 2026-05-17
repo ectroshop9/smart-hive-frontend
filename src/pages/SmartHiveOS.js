@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './SmartHiveOS.css';
 
 function SmartHiveOS() {
+  const { t } = useTranslation();
   const [active, setActive] = useState('master');
 
   return (
     <div className="os-page-container">
-      <h1 className="os-page-title">نظام Smart Hive OS</h1>
-      <p className="os-page-subtitle">شاهد النظام الحقيقي من الداخل</p>
+      <h1 className="os-page-title">{t('os.title')}</h1>
+      <p className="os-page-subtitle">{t('os.subtitle')}</p>
       
       <div className="os-tabs">
         <button 
           className={`os-tab ${active === 'master' ? 'active' : ''}`}
           onClick={() => setActive('master')}
         >
-          <i className="fas fa-server"></i> واجهة الماستر
+          <i className="fas fa-server"></i> {t('os.master')}
         </button>
         <button 
           className={`os-tab ${active === 'slave' ? 'active' : ''}`}
           onClick={() => setActive('slave')}
         >
-          <i className="fas fa-microchip"></i> واجهة السلايف
+          <i className="fas fa-microchip"></i> {t('os.slave')}
         </button>
       </div>
       

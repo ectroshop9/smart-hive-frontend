@@ -84,12 +84,8 @@
    HEADINGS
    ========================================== */
 .story-section h2,
-.exploded-section h2,
 .sensors-section h2,
 .mesh-section h2,
-.features-alt h2,
-.warranty-section h2,
-.smart-order-section h2,
 .section-title {
     font-size: 3.5rem !important;
     font-weight: 800;
@@ -144,72 +140,9 @@
 .story-points li i { color: #FFC107; font-size: 1.2rem; }
 
 /* ==========================================
-   EXPLODED VIEW SECTION
-   ========================================== */
-.exploded-section { padding: 80px 0; }
-
-.exploded-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
-  margin-top: 50px;
-}
-
-.exploded-item {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 40px 20px;
-  text-align: center;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.exploded-item:hover {
-  border-color: #FF003D;
-  transform: translateY(-10px);
-  box-shadow: 0 20px 50px rgba(255, 0, 61, 0.25);
-}
-
-.exploded-icon {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #FF4D00, #FF003D);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-  box-shadow: 0 10px 30px rgba(255, 77, 0, 0.3);
-}
-
-.exploded-icon i { font-size: 35px; color: #fff; }
-.exploded-item h3 { color: #FF4D00; font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
-.exploded-item p { color: var(--text-secondary); }
-
-/* ==========================================
    SENSORS SECTION
    ========================================== */
 .sensors-section { padding: 80px 0; }
-
-/* ==========================================
-   MESH NETWORK SECTION
-   ========================================== */
-.mesh-section { padding: 80px 0; }
-
-.mesh-diagram {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 60px 0;
-}
-
-.mesh-info { text-align: center; max-width: 600px; margin: 20px auto 0; }
-.mesh-info p { color: var(--text-secondary); font-size: 1.2rem; line-height: 1.8; }
-
-/* ==========================================
-   FEATURES SECTION
-   ========================================== */
-.features-alt { padding: 80px 0; }
 
 .features-list {
   display: flex;
@@ -252,179 +185,424 @@
 .feature-row-text h3 { color: #FFC107; font-size: 1.2rem; margin-bottom: 5px; }
 .feature-row-text p { color: var(--text-secondary); margin: 0; font-size: 0.95rem; }
 
-/* ==========================================
-   WARRANTY SECTION
-   ========================================== */
-.warranty-section { padding: 80px 0; }
-
-.warranty-strip {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 50px;
-  flex-wrap: wrap;
+.sensors-image {
+  margin-top: 40px;
+  text-align: center;
 }
 
-.warranty-strip-item {
+.sensors-image img {
+  max-width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+/* ==========================================
+   MESH NETWORK SECTION
+   ========================================== */
+.mesh-section { padding: 80px 0; }
+
+.mesh-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 60px 0;
+}
+
+.mesh-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin: 40px 0;
+}
+
+.mesh-stat-item {
+  text-align: center;
+}
+
+.mesh-stat-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mesh-stat-item span:last-child {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.mesh-info { text-align: center; max-width: 600px; margin: 20px auto 0; }
+.mesh-info p { color: var(--text-secondary); font-size: 1.2rem; line-height: 1.8; }
+
+/* ==========================================
+   PROBLEM SECTION
+   ========================================== */
+.problem-section {
+  padding: 80px 0;
+  background: var(--bg-primary);
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.problem-card {
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 35px 30px;
+  padding: 40px 25px;
   text-align: center;
-  flex: 1;
-  min-width: 220px;
-  max-width: 280px;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
 }
 
-.warranty-strip-item::before {
+.problem-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  height: 4px;
+  background: linear-gradient(135deg, #FF4D00, #FF003D);
 }
 
-.warranty-strip-item:hover {
-  border-color: #FFC107;
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(255, 193, 7, 0.2);
+.problem-card:hover {
+  border-color: #FF4D00;
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(255, 77, 0, 0.2);
 }
 
-.warranty-strip-icon {
+.problem-icon {
   width: 70px;
   height: 70px;
-  background: linear-gradient(135deg, #FF4D00, #FFC107);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
   font-size: 2rem;
-  color: #fff;
-  box-shadow: 0 8px 25px rgba(255, 77, 0, 0.3);
+  border: 2px solid;
 }
 
-.warranty-strip-text h3 { color: #FFC107; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
-.warranty-strip-text p { color: var(--text-secondary); font-size: 0.95rem; margin: 0; }
-
-/* ==========================================
-   SMART ORDER SECTION
-   ========================================== */
-.smart-order-section { padding: 80px 0; }
-
-.order-select,
-.order-input {
-  width: 100%;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px;
-  color: var(--heading-color);
-  font-family: inherit;
-  font-size: 0.95rem;
-  margin-bottom: 10px;
-}
-
-.order-select:focus,
-.order-input:focus {
-  outline: none;
-  border-color: #FFC107;
-}
-
-/* ==========================================
-   BUTTONS
-   ========================================== */
-.btn-gold {
-  background: linear-gradient(135deg, #FF4D00, #FFC107) !important;
-  color: #fff !important;
-  font-weight: bold;
-  padding: 12px 28px;
-  border: 1px solid var(--border) !important;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-gold:hover {
-  background: linear-gradient(135deg, #FFC107, #FF4D00) !important;
-  border-color: #FFC107 !important;
-  box-shadow: 0 10px 30px rgba(255, 193, 7, 0.2);
-  transform: translateX(-5px);
-}
-
-.btn-outline {
-  background: transparent;
-  color: #FFC107;
-  border: 1px solid var(--border);
-  font-weight: bold;
-  padding: 12px 28px;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-outline:hover { 
-  background: linear-gradient(135deg, #FF4D00, #FFC107) !important;
-  color: #fff !important;
-  border-color: #FFC107 !important;
-  box-shadow: 0 10px 30px rgba(255, 193, 7, 0.2);
-  transform: translateX(-5px);
-}
-
-.btn-hero-cta {
-  font-size: 1.5rem;
-  padding: 18px 48px;
-  border-radius: 50px;
-  letter-spacing: 1px;
+.problem-card h3 {
+  font-size: 1.4rem;
   font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, #FF4D00, #FFC107) !important;
-  color: #fff !important;
-  border: 1px solid var(--border) !important;
-  box-shadow: 0 10px 35px rgba(255, 77, 0, 0.4);
-  animation: pulse-cta 2s infinite;
+  margin-bottom: 12px;
+  color: var(--heading-color);
 }
 
-@keyframes pulse-cta {
-  0%, 100% { box-shadow: 0 10px 35px rgba(255, 77, 0, 0.4); }
-  50% { box-shadow: 0 15px 50px rgba(255, 193, 7, 0.5); }
+.problem-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
 }
 
-.btn-hero-cta:hover {
-  background: linear-gradient(135deg, #FFC107, #FF4D00) !important;
-  border-color: #FFC107 !important;
-  transform: translateX(-5px);
-  box-shadow: 0 15px 50px rgba(255, 193, 7, 0.6);
+.problem-stat {
+  background: rgba(255, 77, 0, 0.08);
+  border-radius: 12px;
+  padding: 15px;
 }
 
-/* ==========================================
-   ERROR MESSAGE
-   ========================================== */
-.error-message {
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF4D00, #FFC107);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   display: block;
-  color: #FF003D;
-  font-size: 0.85rem;
-  margin-top: -5px;
-  margin-bottom: 10px;
-  text-align: right;
-  font-weight: 500;
 }
 
 /* ==========================================
-   TILT EFFECTS
+   ENERGY SECTION
    ========================================== */
-.exploded-item, .feature-row, .warranty-strip-item {
-  transition: all 0.3s ease;
-  will-change: transform;
+.energy-section {
+  padding: 80px 0;
+  background: var(--bg-primary);
 }
 
-.btn-gold, .btn-hero-cta { will-change: transform; }
+.energy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.energy-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px 25px;
+  text-align: center;
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.energy-card:hover {
+  border-color: #FF9800;
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(255, 152, 0, 0.2);
+}
+
+.energy-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #FF9800, #FFC107);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 2.2rem;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(255, 152, 0, 0.3);
+}
+
+.energy-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--heading-color);
+}
+
+.energy-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.energy-stat {
+  margin-top: 15px;
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF9800, #FFC107);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ==========================================
+   AI SECTION
+   ========================================== */
+.ai-section {
+  padding: 80px 0;
+}
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.ai-diseases h3 {
+  font-size: 1.5rem;
+  color: #FF4D00;
+  margin-bottom: 20px;
+}
+
+.ai-disease-list {
+  list-style: none;
+}
+
+.ai-disease-list li {
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  color: var(--heading-color);
+}
+
+.ai-disease-list li i {
+  color: #FF003D;
+  font-size: 1.2rem;
+}
+
+.ai-nvidia {
+  text-align: center;
+}
+
+.ai-nvidia-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #76b900, #5a8f00);
+  color: #fff;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(118, 185, 0, 0.3);
+}
+
+.ai-nvidia p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+/* ==========================================
+   SECURITY SECTION
+   ========================================== */
+.security-section {
+  padding: 80px 0;
+}
+
+.security-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  margin-top: 50px;
+}
+
+.security-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.security-card:hover {
+  border-color: #FF4D00;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(255, 77, 0, 0.15);
+}
+
+.security-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #FF003D, #FF4D00);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.security-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #FFC107;
+  margin-bottom: 8px;
+}
+
+.security-card p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   VAULT SECTION
+   ========================================== */
+.vault-section {
+  padding: 80px 0;
+  background: var(--bg-primary);
+}
+
+.vault-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.vault-features {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.vault-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 1.05rem;
+  color: var(--heading-color);
+  transition: all 0.3s ease;
+}
+
+.vault-feature-item:hover {
+  border-color: #FFC107;
+  transform: translateX(-5px);
+}
+
+.vault-feature-item i {
+  color: #FFC107;
+  font-size: 1.2rem;
+}
+
+/* ==========================================
+   QUEEN SECTION
+   ========================================== */
+.queen-section {
+  padding: 80px 0;
+}
+
+.queen-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.queen-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 35px 25px;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.queen-card:hover {
+  border-color: #FFC107;
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(255, 193, 7, 0.2);
+}
+
+.queen-card i {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #FFC107, #FFD700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.queen-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--heading-color);
+  margin-bottom: 10px;
+}
+
+.queen-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
 
 /* ==========================================
    RESPONSIVE
@@ -436,23 +614,34 @@
     max-height: none;
   }
 
-  .btn-hero-cta { font-size: 1.2rem; padding: 14px 36px; }
   .story-grid { grid-template-columns: 1fr; gap: 30px; }
-  .exploded-grid { grid-template-columns: 1fr 1fr; }
-  .error-message { font-size: 0.8rem; }
-
-  .warranty-strip { flex-direction: column; align-items: center; }
-  .warranty-strip-item { max-width: 100%; }
 
   .story-section h2,
-  .exploded-section h2,
   .sensors-section h2,
   .mesh-section h2,
-  .features-alt h2,
-  .warranty-section h2,
-  .smart-order-section h2,
   .section-title {
     font-size: 2.5rem !important;
     color: var(--heading-color);
+  }
+
+  .problem-grid,
+  .energy-grid,
+  .security-grid,
+  .queen-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-grid,
+  .vault-content {
+    grid-template-columns: 1fr;
+  }
+
+  .mesh-stats {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .security-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }

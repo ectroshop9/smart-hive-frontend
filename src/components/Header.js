@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import MobileMenu from './MobileMenu';
 import ThemeToggle from './ThemeToggle';
 import LogoutModal from './LogoutModal';
@@ -9,6 +10,7 @@ import './Header.css';
 function Header() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -16,6 +18,14 @@ function Header() {
   const dropdownRef = useRef(null);
   
   const isActive = (path) => location.pathname === path ? 'active' : '';
+
+  // تبديل اللغة
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'ar' ? 'en' : 'ar';
+    i18n.changeLanguage(newLang);
+    document.documentElement.lang = newLang;
+    document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+  };
   
   useEffect(() => {
     const loggedIn = getSecureItem('isLoggedIn') === 'true';
@@ -70,17 +80,28 @@ function Header() {
         </Link>
         
         <nav className="nav-menu">
-          <Link to="/" className={`nav-link ${isActive('/')}`}>الرئيسية</Link>
-          <Link to="/store" className={`nav-link ${isActive('/store')}`}>المتجر</Link>
-          <Link to="/smart-hive-os" className={`nav-link ${isActive('/smart-hive-os')}`}>نظام التشغيل</Link>
+          <Link to="/" className={`nav-link ${isActive('/')}`}>{t('nav.home')}</Link>
+          <Link to="/store" className={`nav-link ${isActive('/store')}`}>{t('nav.store')}</Link>
+          <Link to="/smart-hive-os" className={`nav-link ${isActive('/smart-hive-os')}`}>{t('nav.os')}</Link>
         </nav>
         
         <div className="header-actions">
           <ThemeToggle />
+          
+          {/* زر تبديل اللغة */}
+          <button className="btn-lang" onClick={toggleLanguage} title={t('nav.language')}>
+            <i className="fas fa-globe"></i>
+            <span>{i18n.language === 'ar' ? 'EN' : 'ع'}</span>
+          </button>
+
           {!isLoggedIn ? (
             <>
-              <Link to="/activate" className="btn-activate"><i className="fas fa-key"></i><span>تسجيل</span></Link>
-              <Link to="/login" className="btn-login"><i className="fas fa-user"></i></Link>
+              <Link to="/activate" className="btn-login" title={t('nav.register')}>
+                <i className="fas fa-key"></i>
+              </Link>
+              <Link to="/login" className="btn-login" title={t('nav.login')}>
+                <i className="fas fa-user"></i>
+              </Link>
             </>
           ) : (
             <div className="user-menu" ref={dropdownRef}>
@@ -92,13 +113,13 @@ function Header() {
               {dropdownOpen && (
                 <div className="user-dropdown">
                   <Link to="/dashboard" onClick={() => setDropdownOpen(false)}>
-                    <i className="fas fa-tachometer-alt"></i> لوحة التحكم
+                    <i className="fas fa-tachometer-alt"></i> {t('nav.dashboard')}
                   </Link>
                   <Link to="/dashboard/profile" onClick={() => setDropdownOpen(false)}>
-                    <i className="fas fa-user-circle"></i> الملف الشخصي
+                    <i className="fas fa-user-circle"></i> {t('nav.profile')}
                   </Link>
                   <button onClick={handleLogoutClick}>
-                    <i className="fas fa-sign-out-alt"></i> تسجيل الخروج
+                    <i className="fas fa-sign-out-alt"></i> {t('nav.logout')}
                   </button>
                 </div>
               )}
