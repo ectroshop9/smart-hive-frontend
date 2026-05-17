@@ -1,9 +1,20 @@
-// taskbar.js - شريط المهام
+// taskbar.js - Taskbar (i18n Ready)
+
 let startMenuOpen = false;
-let espnowMenuOpen = false;
+let meshMenuOpen = false;
+
+function _(key, fallback) {
+    return (typeof osT === 'function' ? osT(key) : null) || fallback || key;
+}
 
 function toggleStartMenu() {
     const menu = document.getElementById('startMenu');
+    const meshMenu = document.getElementById('meshMenu');
+    if (!menu) return;
+    if (meshMenu && meshMenu.style.display === 'block') {
+        meshMenu.style.display = 'none';
+        meshMenuOpen = false;
+    }
     startMenuOpen = !startMenuOpen;
     menu.style.display = startMenuOpen ? 'block' : 'none';
 }
@@ -11,6 +22,7 @@ function toggleStartMenu() {
 document.addEventListener('click', (e) => {
     const menu = document.getElementById('startMenu');
     const btn = document.querySelector('.start-btn');
+    if (!menu) return;
     if (startMenuOpen && !menu.contains(e.target) && !btn.contains(e.target)) {
         menu.style.display = 'none';
         startMenuOpen = false;
@@ -19,18 +31,19 @@ document.addEventListener('click', (e) => {
 
 function updateTaskbarClock() {
     const now = new Date();
+    const lang = localStorage.getItem('os-language') || 'ar';
+    const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
     const timeEl = document.getElementById('taskbarTime');
     const dateEl = document.getElementById('taskbarDate');
-    if (timeEl) timeEl.textContent = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-    if (dateEl) dateEl.textContent = now.toLocaleDateString('ar-EG', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    if (timeEl) timeEl.textContent = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+    if (dateEl) dateEl.textContent = now.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 setInterval(updateTaskbarClock, 1000);
 updateTaskbarClock();
 
 function updateBatteryLevel() {
-    const level = 85;
     const batteryEl = document.getElementById('batteryLevel');
-    if (batteryEl) batteryEl.textContent = level + '%';
+    if (batteryEl) batteryEl.textContent = '85%';
 }
 updateBatteryLevel();
 
@@ -42,7 +55,7 @@ function addTaskbarApp(id, name) {
         app.id = `taskbar-${id}`;
         app.className = 'taskbar-app';
         app.innerHTML = `<i class="fas fa-window-maximize"></i><span>${name}</span>`;
-        app.onclick = () => focusWindow(id);
+        app.onclick = () => { if (typeof focusWindow === 'function') focusWindow(id); };
         apps.appendChild(app);
     }
 }
@@ -59,68 +72,27 @@ function setActiveTaskbarApp(id) {
 }
 
 function restartSystem() {
-    if (confirm('هل أنت متأكد من إعادة تشغيل النظام؟')) {
-        triggerAlert('🔄 جاري إعادة التشغيل...');
+    const confirmText = _('taskbar.confirmRestart', 'هل أنت متأكد من إعادة تشغيل النظام؟');
+    const restartingText = _('taskbar.restarting', 'جاري إعادة التشغيل...');
+    if (confirm(confirmText)) {
+        if (typeof triggerAlert === 'function') triggerAlert('🔄 ' + restartingText);
         setTimeout(() => location.reload(), 2000);
     }
 }
 
-// قائمة ESP-NOW
-function toggleESPNowMenu(event) {
-    event.stopPropagation();
-    const menu = document.getElementById('espnowMenu');
+function toggleMeshMenu(event) {
+    if (event) event.stopPropagation();
+    const menu = document.getElementById('meshMenu');
     if (!menu) return;
-    espnowMenuOpen = !espnowMenuOpen;
-    menu.style.display = espnowMenuOpen ? 'block' : 'none';
-    if (espnowMenuOpen) updateESPNowStatus();
-    if (startMenuOpen) toggleStartMenu();
-}
-
-function updateESPNowStatus() {
-    const devices = [
-        { name: 'HIVE-01', mac: '24:0A:C4:12:34:56', rssi: -45 },
-        { name: 'HIVE-02', mac: '24:0A:C4:78:90:12', rssi: -62 },
-        { name: 'HIVE-03', mac: '24:0A:C4:34:56:78', rssi: -71 }
-    ];
-    const countEl = document.getElementById('espnowDeviceCount');
-    if (countEl) countEl.textContent = devices.length;
-    
-    const listContainer = document.getElementById('espnowDeviceList');
-    if (listContainer) {
-        listContainer.innerHTML = devices.map(d => `
-            <div class="espnow-device-item">
-                <div class="espnow-device-info">
-                    <i class="fas fa-microchip"></i>
-                    <div><div class="espnow-device-name">${d.name}</div><div class="espnow-device-mac">${d.mac}</div></div>
-                </div>
-                <div class="espnow-signal"><span>${d.rssi} dBm</span></div>
-            </div>
-        `).join('');
-    }
+    meshMenuOpen = !meshMenuOpen;
+    menu.style.display = meshMenuOpen ? 'block' : 'none';
 }
 
 function getSignalBars(rssi) {
-    let bars = 4;
-    if (rssi < -80) bars = 1;
-    else if (rssi < -65) bars = 2;
-    else if (rssi < -50) bars = 3;
-    let html = '';
-    for (let i = 0; i < 4; i++) html += `<div class="espnow-signal-bar ${i < bars ? 'active' : ''}"></div>`;
-    return html;
+    if (rssi < -80) return 1;
+    if (rssi < -65) return 2;
+    if (rssi < -50) return 3;
+    return 4;
 }
 
-function scanESPNowDevices() {
-    triggerAlert('🔍 جاري مسح أجهزة ESP-NOW...');
-    setTimeout(() => { updateESPNowStatus(); triggerAlert('✅ تم تحديث قائمة الأجهزة'); }, 1500);
-}
-
-document.addEventListener('click', (e) => {
-    const menu = document.getElementById('espnowMenu');
-    const wifi = document.querySelector('.taskbar-icons .fa-wifi');
-    if (espnowMenuOpen && menu && !menu.contains(e.target) && wifi && !wifi.contains(e.target)) {
-        menu.style.display = 'none';
-        espnowMenuOpen = false;
-    }
-});
-
-console.log('✅ Taskbar loaded');
+console.log('✅ Taskbar loaded (i18n Ready)');

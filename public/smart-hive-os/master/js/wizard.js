@@ -1,7 +1,12 @@
-// wizard.js - معالج الإعداد
+// wizard.js - Setup Wizard (i18n Ready)
+
 let setupCurrentStep = 1;
 let setupConfig = { username: 'admin', password: '1234', apiaryName: '', location: '', wilaya: '16', apSsid: 'SmartHive_OS' };
 let setupSelectedDevices = [];
+
+function _(key, fallback) {
+    return (typeof osT === 'function' ? osT(key) : null) || fallback || key;
+}
 
 function openSetupWizard() { setupCurrentStep = 1; document.getElementById('setupModal').style.display = 'flex'; showSetupStep(1); }
 function closeSetupWizard() { document.getElementById('setupModal').style.display = 'none'; }
@@ -14,7 +19,10 @@ function showSetupStep(step) {
         if (idx+1 === step) el.classList.add('active'); else if (idx+1 < step) el.classList.add('completed');
     });
     document.getElementById('setupPrevBtn').style.display = step > 1 ? 'inline-flex' : 'none';
-    document.getElementById('setupNextBtn').innerHTML = step === 6 ? '✅ تأكيد وحفظ' : 'التالي <i class="fas fa-chevron-left"></i>';
+    
+    const nextText = step === 6 ? '✅ ' + _('wizard.confirm', 'تأكيد وحفظ') : _('wizard.next', 'التالي') + ' <i class="fas fa-chevron-left"></i>';
+    document.getElementById('setupNextBtn').innerHTML = nextText;
+    
     if (step === 3) populateWilayaSelect();
     if (step === 6) generateSetupSummary();
     document.getElementById('currentStepDisplay').innerText = step;
@@ -24,7 +32,8 @@ function showSetupStep(step) {
 
 function checkPasswordStrength(p) {
     let s = 0; if (p.length >= 8) s++; if (/[A-Z]/.test(p)) s++; if (/[0-9]/.test(p)) s++; if (/[^A-Za-z0-9]/.test(p)) s++;
-    const levels = ['ضعيف', 'متوسط', 'جيد', 'قوي'], colors = ['#ff3e3e', '#ffa500', '#ffc107', '#39ff14'];
+    const levels = [_('wizard.strength_weak', 'ضعيف'), _('wizard.strength_medium', 'متوسط'), _('wizard.strength_good', 'جيد'), _('wizard.strength_strong', 'قوي')];
+    const colors = ['#ff3e3e', '#ffa500', '#ffc107', '#39ff14'];
     const idx = Math.min(s, 3);
     document.getElementById('strengthText').textContent = levels[idx];
     document.getElementById('strengthFill').style.width = ['25%','50%','75%','100%'][idx];
@@ -34,7 +43,8 @@ function checkPasswordStrength(p) {
 function setupNext() {
     if (setupCurrentStep === 1) {
         const pass = document.getElementById('setupPass').value;
-        if (pass !== document.getElementById('setupConfirmPass').value) { triggerAlert('❌ كلمة المرور غير متطابقة'); return; }
+        const mismatchText = _('wizard.passwordMismatch', 'كلمة المرور غير متطابقة');
+        if (pass !== document.getElementById('setupConfirmPass').value) { triggerAlert('❌ ' + mismatchText); return; }
         setupConfig.username = document.getElementById('setupUser').value;
         setupConfig.password = pass;
     }
@@ -43,20 +53,30 @@ function setupNext() {
     if (setupCurrentStep === 6) { completeSetup(); return; }
     if (setupCurrentStep < 6) showSetupStep(setupCurrentStep + 1);
 }
+
 function setupPrev() { if (setupCurrentStep > 1) showSetupStep(setupCurrentStep - 1); }
+
 function populateWilayaSelect() { const s=document.getElementById('setupWilaya'); if(s) s.innerHTML=CONFIG.WILAYA_LIST.map((w,i)=>`<option value="${i+1}">${w}</option>`).join(''); }
+
 function generateSetupSummary() {
+    const adminLabel = _('wizard.step1', 'المسؤول');
+    const apiaryLabel = _('wizard.step2', 'المنحل');
+    const networkLabel = _('wizard.step4', 'الشبكة');
+    const unknownText = _('wizard.unspecified', 'غير محدد');
+    
     document.getElementById('setupSummary').innerHTML = `
-        <div class="summary-line"><strong>👤 المسؤول:</strong> ${setupConfig.username}</div>
-        <div class="summary-line"><strong>🏠 المنحل:</strong> ${setupConfig.apiaryName || 'غير محدد'}</div>
-        <div class="summary-line"><strong>📡 الشبكة:</strong> ${setupConfig.apSsid}</div>
+        <div class="summary-line"><strong>👤 ${adminLabel}:</strong> ${setupConfig.username}</div>
+        <div class="summary-line"><strong>🏠 ${apiaryLabel}:</strong> ${setupConfig.apiaryName || unknownText}</div>
+        <div class="summary-line"><strong>📡 ${networkLabel}:</strong> ${setupConfig.apSsid}</div>
     `;
 }
+
 async function completeSetup() {
     try { await fetch(`${CONFIG.API_BASE}/setup/complete`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(setupConfig) }); } catch (e) {}
     closeSetupWizard();
-    triggerAlert('✅ تم حفظ الإعدادات');
+    triggerAlert('✅ ' + _('wizard.saved', 'تم حفظ الإعدادات'));
 }
-function scanDevicesSetup() { triggerAlert('🔍 جاري البحث...'); }
 
-console.log('✅ Wizard loaded');
+function scanDevicesSetup() { triggerAlert('🔍 ' + _('wizard.scanning', 'جاري البحث...')); }
+
+console.log('✅ Wizard loaded (i18n Ready)');

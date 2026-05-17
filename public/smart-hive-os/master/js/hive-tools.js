@@ -1,5 +1,10 @@
-// hive-tools.js - أيقونة أدوات التحكم
+// hive-tools.js - Control Tools Icon (i18n Ready)
+
 let currentToolsHive = 'HIVE-01';
+
+function _(key, fallback) {
+    return (typeof osT === 'function' ? osT(key) : null) || fallback || key;
+}
 
 function openHiveTools() {
     openHiveSelector('tools', function(selectedHive) {
@@ -18,14 +23,19 @@ async function sendControlCommand(command) {
     const resultDiv = document.getElementById('toolsResult');
     
     const commandNames = {
-        'fan_on': 'تشغيل المروحة',
-        'fan_off': 'إيقاف المروحة',
-        'restart': 'إعادة تشغيل',
-        'calibrate': 'معايرة الحساسات',
-        'battery_check': 'فحص البطارية'
+        'fan_on': _('modals.fanOn', 'تشغيل المروحة'),
+        'fan_off': _('modals.fanOff', 'إيقاف المروحة'),
+        'restart': _('modals.restart', 'إعادة تشغيل الخلية'),
+        'calibrate': _('modals.calibrate', 'معايرة الحساسات'),
+        'battery_check': _('modals.batteryCheck', 'فحص البطارية')
     };
     
-    resultDiv.innerHTML = `⏳ جاري ${commandNames[command]}...`;
+    const executingText = _('tools.executing', 'جاري');
+    const successText = _('tools.success', 'تم');
+    const failedText = _('tools.failed', 'فشل');
+    const simulationText = _('tools.simulation', 'محاكاة');
+    
+    resultDiv.innerHTML = `⏳ ${executingText} ${commandNames[command]}...`;
     
     try {
         const response = await fetch(`${CONFIG.API_BASE}/hive/${currentToolsHive}/control`, {
@@ -36,19 +46,17 @@ async function sendControlCommand(command) {
         const data = await response.json();
         
         if (data.success) {
-            resultDiv.innerHTML = `✅ تم ${commandNames[command]} بنجاح`;
+            resultDiv.innerHTML = `✅ ${successText} ${commandNames[command]}`;
             triggerAlert(`✅ ${commandNames[command]} - ${currentToolsHive}`, 'success');
         } else {
-            resultDiv.innerHTML = `❌ فشل ${commandNames[command]}`;
+            resultDiv.innerHTML = `❌ ${failedText} ${commandNames[command]}`;
         }
     } catch (error) {
-        console.log('⚠️ استخدام المحاكاة لأدوات التحكم');
-        
         setTimeout(() => {
-            resultDiv.innerHTML = `✅ تم ${commandNames[command]} بنجاح (محاكاة)`;
-            triggerAlert(`✅ ${commandNames[command]} - ${currentToolsHive} (محاكاة)`, 'success');
+            resultDiv.innerHTML = `✅ ${successText} ${commandNames[command]} (${simulationText})`;
+            triggerAlert(`✅ ${commandNames[command]} - ${currentToolsHive} (${simulationText})`, 'success');
         }, 1000);
     }
 }
 
-console.log('✅ Hive Tools loaded');
+console.log('✅ Hive Tools loaded (i18n Ready)');

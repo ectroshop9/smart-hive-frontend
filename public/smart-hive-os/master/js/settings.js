@@ -1,5 +1,6 @@
 // settings.js - إدارة إعدادات النظام
 // متوافق مع OTA Manager - تحديثات يدوية
+// يدعم i18n للنظام
 
 let settingsConfig = {
     language: 'ar', 
@@ -18,7 +19,7 @@ let settingsConfig = {
     report_interval: '30', 
     watchdog_timeout: '15', 
     watchdog_enable: true,
-    update_notify: true,        // 🆕 إشعارات التحديث (بدل auto_update)
+    update_notify: true,
     update_channel: 'stable', 
     version: '6.0.0', 
     device_name: 'SmartHive-01'
@@ -38,42 +39,41 @@ function loadSettings() {
         settingsConfig = { ...settingsConfig, ...JSON.parse(saved) };
     }
     
-    // عناصر النظام
     document.getElementById('sys-language').value = settingsConfig.language;
     document.getElementById('sys-safemode-auto').checked = settingsConfig.safemode_auto;
     document.getElementById('sys-safemode-limit').value = settingsConfig.safemode_limit;
     document.getElementById('sys-lvgl-core').value = settingsConfig.lvgl_core;
     document.getElementById('sys-queue-size').value = settingsConfig.queue_size;
     
-    // عناصر الشبكة
     document.getElementById('net-ap-ssid').value = settingsConfig.ap_ssid;
     document.getElementById('net-wifi-channel').value = settingsConfig.wifi_channel;
     document.getElementById('net-mesh-channel').value = settingsConfig.mesh_channel;
     
-    // عناصر الطاقة
     document.getElementById('pwr-max-freq').value = settingsConfig.max_freq;
     document.getElementById('pwr-min-freq').value = settingsConfig.min_freq;
     document.getElementById('pwr-light-sleep').checked = settingsConfig.light_sleep;
     document.getElementById('pwr-deep-sleep').value = settingsConfig.deep_sleep;
     
-    // عناصر الأمان
     document.getElementById('sec-encryption').checked = settingsConfig.encryption;
     
-    // عناصر المراقبة
     document.getElementById('mon-report-interval').value = settingsConfig.report_interval;
     document.getElementById('mon-watchdog-timeout').value = settingsConfig.watchdog_timeout;
     document.getElementById('mon-watchdog-enable').checked = settingsConfig.watchdog_enable;
     
-    // 🆕 عناصر التحديث
     document.getElementById('update-notify').checked = settingsConfig.update_notify;
     document.getElementById('update-channel').value = settingsConfig.update_channel;
     document.getElementById('update-version').innerText = `v${settingsConfig.version}`;
+    
+    // تطبيق اللغة
+    applyOSLanguage(settingsConfig.language);
 }
 
 // ========== حفظ الإعدادات ==========
 async function saveAllSettings() {
+    const newLang = document.getElementById('sys-language').value;
+    
     settingsConfig = {
-        language: document.getElementById('sys-language').value,
+        language: newLang,
         safemode_auto: document.getElementById('sys-safemode-auto').checked,
         safemode_limit: document.getElementById('sys-safemode-limit').value,
         lvgl_core: document.getElementById('sys-lvgl-core').value,
@@ -89,7 +89,7 @@ async function saveAllSettings() {
         report_interval: document.getElementById('mon-report-interval').value,
         watchdog_timeout: document.getElementById('mon-watchdog-timeout').value,
         watchdog_enable: document.getElementById('mon-watchdog-enable').checked,
-        update_notify: document.getElementById('update-notify').checked,  // 🆕
+        update_notify: document.getElementById('update-notify').checked,
         update_channel: document.getElementById('update-channel').value,
         version: settingsConfig.version,
         device_name: settingsConfig.device_name
@@ -107,7 +107,20 @@ async function saveAllSettings() {
         console.warn('Failed to save settings to server:', error);
     }
     
-    triggerAlert('✅ تم حفظ جميع الإعدادات');
+    // تغيير اللغة إذا تغيرت
+    if (newLang !== localStorage.getItem('os-language')) {
+        changeOSLanguage(newLang);
+    } else {
+        triggerAlert('✅ تم حفظ جميع الإعدادات');
+    }
+}
+
+// ========== تطبيق اللغة بدون إعادة تحميل ==========
+function applyOSLanguage(lang) {
+    localStorage.setItem('os-language', lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    applyOSTranslations();
 }
 
 // ========== تحديث معلومات "حول النظام" ==========
@@ -115,8 +128,6 @@ function updateAboutInfo() {
     document.getElementById('about-version').innerText = `Smart Hive OS v${settingsConfig.version}`;
     document.getElementById('about-device-name').innerText = settingsConfig.device_name;
     document.getElementById('about-uptime').innerText = document.getElementById('uptime-display')?.innerText || '00:00:00';
-    
-    // تحديث الذاكرة (قيم افتراضية - يمكن تحديثها من API)
     document.getElementById('about-free-heap').innerText = '~245 KB';
     document.getElementById('about-free-psram').innerText = '~7.8 MB';
 }
@@ -136,7 +147,7 @@ function generateEncryptionKey() {
 
 // ========== تغيير كلمة المرور ==========
 function changePassword() {
-    const newPass = prompt('أدخل كلمة المرور الجديدة:');
+    const newPass = prompt(osT('settings.changePassword') + ':');
     if (newPass && newPass.length >= 4) {
         triggerAlert('🔒 تم تغيير كلمة المرور بنجاح');
     } else if (newPass) {
@@ -164,7 +175,7 @@ function factoryReset() {
     } 
 }
 
-// ========== فحص التحديثات (مرتبط مع OTA Manager) ==========
+// ========== فحص التحديثات ==========
 async function checkForUpdate() { 
     triggerAlert('📥 جاري التحقق من التحديثات...');
     
@@ -172,29 +183,24 @@ async function checkForUpdate() {
         const response = await fetch('/api/ota/check');
         const data = await response.json();
         
-        // تحديث وقت آخر فحص
         document.getElementById('update-last-check').innerText = new Date().toLocaleString('ar-EG');
         
         let hasUpdate = false;
         
-        // فحص تحديث الماستر
         if (data.has_master_update) {
             triggerAlert(`📦 تحديث جديد للمستر: ${data.master_version}`);
             hasUpdate = true;
         }
         
-        // فحص تحديث الخلايا
         if (data.has_worker_update) {
             triggerAlert(`📦 تحديث جديد للخلايا: ${data.worker_version}`);
             hasUpdate = true;
         }
         
-        // لا توجد تحديثات
         if (!hasUpdate) {
             triggerAlert('✅ النظام محدث لأحدث إصدار');
         }
         
-        // 🆕 إظهار إشعار في الواجهة إذا كانت الإشعارات مفعلة
         if (hasUpdate && settingsConfig.update_notify) {
             showUpdateNotification(data);
         }
@@ -209,11 +215,9 @@ async function checkForUpdate() {
 
 // ========== إظهار إشعار التحديث ==========
 function showUpdateNotification(data) {
-    // إزالة أي إشعار قديم
     const oldNotification = document.querySelector('.update-notification');
     if (oldNotification) oldNotification.remove();
     
-    // إنشاء الإشعار
     const notification = document.createElement('div');
     notification.className = 'update-notification';
     notification.style.cssText = `
@@ -259,7 +263,6 @@ function showUpdateNotification(data) {
     
     document.body.appendChild(notification);
     
-    // إخفاء تلقائي بعد 30 ثانية
     setTimeout(() => {
         if (notification.parentElement) {
             notification.remove();
@@ -277,9 +280,8 @@ function restartSystem() {
     }
 }
 
-// ========== تهيئة الأحداث عند تحميل الصفحة ==========
+// ========== تهيئة الأحداث ==========
 document.addEventListener('DOMContentLoaded', function() {
-    // معالج رفع ملف التحديث
     const fileInput = document.getElementById('update-file');
     if (fileInput) {
         fileInput.addEventListener('change', async function(e) {
@@ -317,7 +319,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // مراقبة فتح صفحة الإعدادات
     const observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.target.id === 'set' && mutation.target.classList.contains('active')) {
@@ -329,7 +330,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const setPage = document.getElementById('set');
     if (setPage) observer.observe(setPage, { attributes: true });
     
-    // تحميل وقت آخر فحص من localStorage
     const lastCheck = localStorage.getItem('lastUpdateCheck');
     if (lastCheck) {
         const el = document.getElementById('update-last-check');
@@ -337,20 +337,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ========== إضافة أنيميشن CSS ==========
+// ========== أنيميشن CSS ==========
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(100%);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        from { opacity: 0; transform: translateX(100%); }
+        to { opacity: 1; transform: translateX(0); }
     }
 `;
 document.head.appendChild(style);
 
-console.log('✅ Settings module loaded - OTA Ready (Manual Update Mode)');
+console.log('✅ Settings module loaded - OTA Ready with i18n Support');

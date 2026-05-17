@@ -1130,3 +1130,20 @@ body {
     color: #ddd;
     border-color: #444;
 }
+/* قائمة ابدأ - تفتح في اليسار */
+.start-menu {
+    left: 0 !important;
+    right: auto !important;
+    bottom: 40px;
+    position: fixed;
+    z-index: 10000;
+}
+
+/* قائمة Mesh - تفتح في اليسار */
+#meshMenu {
+    left: 0 !important;
+    right: auto !important;
+    bottom: 40px;
+    position: fixed;
+    z-index: 9999;
+}

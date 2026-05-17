@@ -1,24 +1,25 @@
-// hive-selector.js - نافذة اختيار الخلية المشتركة
+// hive-selector.js - Shared Hive Selector Modal (i18n Ready)
+
 let currentCallback = null;
-let currentMode = 'health'; // 'health', 'stats', 'tools', 'update'
+let currentMode = 'health';
+
+function _(key, fallback) {
+    return (typeof osT === 'function' ? osT(key) : null) || fallback || key;
+}
 
 function openHiveSelector(mode, callback) {
     currentMode = mode;
     currentCallback = callback;
     
-    // تحديث عنوان النافذة
     const titles = {
-        'health': '❤️ اختر الخلية - صحة الخلية',
-        'stats': '📊 اختر الخلية - إحصائيات',
-        'tools': '🛠️ اختر الخلية - أدوات التحكم',
-        'update': '🔄 اختر الخلية - تحديث النظام'
+        'health': '❤️ ' + _('modals.hiveSelector', 'اختر الخلية') + ' - ' + _('desktop.hiveHealth', 'صحة الخلية'),
+        'stats': '📊 ' + _('modals.hiveSelector', 'اختر الخلية') + ' - ' + _('desktop.hiveStats', 'إحصائيات'),
+        'tools': '🛠️ ' + _('modals.hiveSelector', 'اختر الخلية') + ' - ' + _('desktop.controlTools', 'أدوات التحكم'),
+        'update': '🔄 ' + _('modals.hiveSelector', 'اختر الخلية') + ' - ' + _('desktop.updateHives', 'تحديث النظام')
     };
-    document.getElementById('selectorTitle').innerText = titles[mode] || 'اختر الخلية';
+    document.getElementById('selectorTitle').innerText = titles[mode] || _('modals.hiveSelector', 'اختر الخلية');
     
-    // تحديث القائمة المنسدلة
     updateHiveSelectorDropdown();
-    
-    // إظهار النافذة
     document.getElementById('hiveSelectorModal').style.display = 'flex';
 }
 
@@ -31,34 +32,27 @@ function updateHiveSelectorDropdown() {
     const dropdown = document.getElementById('hiveSelectorDropdown');
     if (!dropdown) return;
     
-    // استخدام hives من hives.js (إذا كان محملاً)
+    const connectedText = _('dashboard.connected', 'متصل');
+    
     if (typeof hives !== 'undefined' && hives.length > 0) {
         dropdown.innerHTML = hives.map(h => 
-            `<option value="${h.id}">${h.id} - ${h.status}</option>`
+            `<option value="${h.id}">${h.id} - ${h.status || connectedText}</option>`
         ).join('');
     } else {
-        // بيانات تجريبية
         dropdown.innerHTML = `
-            <option value="HIVE-01">HIVE-01 - متصل</option>
-            <option value="HIVE-02">HIVE-02 - متصل</option>
-            <option value="HIVE-03">HIVE-03 - متصل</option>
+            <option value="HIVE-01">HIVE-01 - ${connectedText}</option>
+            <option value="HIVE-02">HIVE-02 - ${connectedText}</option>
+            <option value="HIVE-03">HIVE-03 - ${connectedText}</option>
         `;
     }
 }
 
 function confirmHiveSelection() {
-    console.log('✅ تم الضغط على تأكيد');
-    
     const dropdown = document.getElementById('hiveSelectorDropdown');
     const selectedHive = dropdown?.value || 'HIVE-01';
     
-    console.log('✅ الخلية المختارة:', selectedHive);
-    console.log('✅ النمط الحالي:', currentMode);
-    
-    // إغلاق نافذة الاختيار
     closeHiveSelector();
     
-    // ✅ افتح النافذة المناسبة
     setTimeout(() => {
         if (currentMode === 'health') {
             document.getElementById('healthHiveId').innerText = selectedHive;
@@ -70,7 +64,6 @@ function confirmHiveSelection() {
             document.getElementById('toolsHiveId').innerText = selectedHive;
             document.getElementById('hiveToolsModal').style.display = 'flex';
         } else if (currentMode === 'update') {
-            console.log('🔵 فتح نافذة التحديث...');
             document.getElementById('updateHiveId').innerText = selectedHive;
             document.getElementById('hiveUpdateModal').style.display = 'flex';
             if (typeof loadHiveUpdateInfo === 'function') {
@@ -79,11 +72,10 @@ function confirmHiveSelection() {
         }
     }, 100);
     
-    // استدعاء callback إذا وجد
     if (currentCallback) {
         currentCallback(selectedHive);
     }
 }
 
 window.confirmHiveSelection = confirmHiveSelection;
-console.log('✅ Hive Selector loaded');
+console.log('✅ Hive Selector loaded (i18n Ready)');

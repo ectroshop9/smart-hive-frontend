@@ -1,10 +1,16 @@
-// hive-stats.js - أيقونة إحصائيات الخلية
+// hive-stats.js - Hive Statistics Icon (i18n Ready)
+
 let currentStatsHive = 'all';
+
+function _(key, fallback) {
+    return (typeof osT === 'function' ? osT(key) : null) || fallback || key;
+}
 
 function openHiveStats() {
     openHiveSelector('stats', function(selectedHive) {
         currentStatsHive = selectedHive;
-        document.getElementById('statsHiveId').innerText = selectedHive === 'all' ? 'جميع الخلايا' : selectedHive;
+        const allHivesText = _('hives.allHives', 'جميع الخلايا');
+        document.getElementById('statsHiveId').innerText = selectedHive === 'all' ? allHivesText : selectedHive;
         document.getElementById('hiveStatsModal').style.display = 'flex';
         loadHiveStats(selectedHive);
     });
@@ -20,22 +26,16 @@ function refreshHiveStats() {
 
 async function loadHiveStats(hiveId) {
     const body = document.getElementById('statsBody');
-    body.innerHTML = '<div class="stats-loading">جاري تحميل الإحصائيات...</div>';
+    body.innerHTML = `<div class="stats-loading">${_('modals.statsLoading', 'جاري تحميل الإحصائيات...')}</div>`;
     
     try {
         const response = await fetch(`${CONFIG.API_BASE}/hive/${hiveId}/stats`);
         const data = await response.json();
         displayStatsData(data);
     } catch (error) {
-        console.log('⚠️ استخدام البيانات التجريبية للإحصائيات');
         const mockData = {
-            total_hives: 3,
-            avg_temp: 34.5,
-            avg_humidity: 62,
-            total_weight: 72.5,
-            total_honey: 45.2,
-            active_hives: 3,
-            alerts_today: 0
+            total_hives: 3, avg_temp: 34.5, avg_humidity: 62,
+            total_weight: 72.5, total_honey: 45.2, active_hives: 3, alerts_today: 0
         };
         displayStatsData(mockData);
     }
@@ -47,17 +47,17 @@ function displayStatsData(data) {
             <div class="stat-card">
                 <i class="fas fa-database"></i>
                 <div class="value">${data.total_hives || 0}</div>
-                <div class="label">إجمالي الخلايا</div>
+                <div class="label">${_('dashboard.totalHives', 'إجمالي الخلايا')}</div>
             </div>
             <div class="stat-card">
                 <i class="fas fa-wifi"></i>
                 <div class="value">${data.active_hives || 0}</div>
-                <div class="label">الخلايا النشطة</div>
+                <div class="label">${_('hives.activeHives', 'الخلايا النشطة')}</div>
             </div>
             <div class="stat-card">
                 <i class="fas fa-exclamation-triangle"></i>
                 <div class="value">${data.alerts_today || 0}</div>
-                <div class="label">تنبيهات اليوم</div>
+                <div class="label">${_('dashboard.alertsToday', 'تنبيهات اليوم')}</div>
             </div>
         </div>
         
@@ -65,27 +65,27 @@ function displayStatsData(data) {
             <div class="stat-card">
                 <i class="fas fa-temperature-high"></i>
                 <div class="value">${data.avg_temp?.toFixed(1) || '--'}°C</div>
-                <div class="label">متوسط الحرارة</div>
+                <div class="label">${_('dashboard.avgTemp', 'متوسط الحرارة')}</div>
             </div>
             <div class="stat-card">
                 <i class="fas fa-tint"></i>
                 <div class="value">${data.avg_humidity?.toFixed(1) || '--'}%</div>
-                <div class="label">متوسط الرطوبة</div>
+                <div class="label">${_('dashboard.avgHumidity', 'متوسط الرطوبة')}</div>
             </div>
             <div class="stat-card">
                 <i class="fas fa-weight-scale"></i>
                 <div class="value">${data.total_weight?.toFixed(1) || '--'} kg</div>
-                <div class="label">الوزن الإجمالي</div>
+                <div class="label">${_('health.totalWeight', 'الوزن الإجمالي')}</div>
             </div>
         </div>
         
         <div class="health-diagnosis">
-            <h3><i class="fas fa-chart-line"></i> ملخص</h3>
-            <p>إجمالي إنتاج العسل المقدر: <strong>${data.total_honey?.toFixed(1) || '--'} kg</strong></p>
+            <h3><i class="fas fa-chart-line"></i> ${_('health.summary', 'ملخص')}</h3>
+            <p>${_('health.totalHoney', 'إجمالي إنتاج العسل المقدر')}: <strong>${data.total_honey?.toFixed(1) || '--'} kg</strong></p>
         </div>
     `;
     
     document.getElementById('statsBody').innerHTML = html;
 }
 
-console.log('✅ Hive Stats loaded');
+console.log('✅ Hive Stats loaded (i18n Ready)');

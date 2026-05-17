@@ -1,5 +1,10 @@
-// windows.js - مدير النوافذ
+// windows.js - Window Manager (i18n Ready)
+
 let windowZIndex = 1000;
+
+function _(key, fallback) {
+    return (typeof osT === 'function' ? osT(key) : null) || fallback || key;
+}
 
 function openWindow(pageId) {
     if (document.getElementById(`window-${pageId}`)) { focusWindow(pageId); return; }
@@ -13,7 +18,7 @@ function openWindow(pageId) {
     win.style.left = '100px';
     win.style.top = '100px';
     
-    const title = pageContent.querySelector('.page-title')?.innerText || 'نافذة';
+    const title = pageContent.querySelector('.page-title')?.innerText || _('desktop.window', 'نافذة');
     win.innerHTML = `
         <div class="os-window-header">
             <div class="os-window-title"><i class="fas fa-window-maximize"></i><span>${title}</span></div>
@@ -26,33 +31,55 @@ function openWindow(pageId) {
         <div class="os-window-content">${pageContent.innerHTML}</div>
     `;
     document.getElementById('workspace').appendChild(win);
-    addTaskbarApp(pageId, title);
+    if (typeof addTaskbarApp === 'function') addTaskbarApp(pageId, title);
     focusWindow(pageId);
 }
 
-function closeWindow(pageId) { document.getElementById(`window-${pageId}`)?.remove(); removeTaskbarApp(pageId); }
-function minimizeWindow(pageId) { document.getElementById(`window-${pageId}`).style.display = 'none'; }
-function focusWindow(pageId) { const win = document.getElementById(`window-${pageId}`); if (win) { win.style.display = 'block'; win.style.zIndex = ++windowZIndex; setActiveTaskbarApp(pageId); } }
-function maximizeWindow(pageId) {
+function closeWindow(pageId) {
+    document.getElementById(`window-${pageId}`)?.remove();
+    if (typeof removeTaskbarApp === 'function') removeTaskbarApp(pageId);
+}
+
+function minimizeWindow(pageId) {
+    const win = document.getElementById(`window-${pageId}`);
+    if (win) win.style.display = 'none';
+}
+
+function focusWindow(pageId) {
     const win = document.getElementById(`window-${pageId}`);
     if (win) {
-        if (win.style.width === '100%') { win.style.width = '600px'; win.style.height = '450px'; win.style.left = '100px'; win.style.top = '100px'; }
-        else { win.style.width = '100%'; win.style.height = 'calc(100vh - 40px)'; win.style.left = '0'; win.style.top = '0'; }
+        win.style.display = 'block';
+        win.style.zIndex = ++windowZIndex;
+        if (typeof setActiveTaskbarApp === 'function') setActiveTaskbarApp(pageId);
     }
 }
 
-// نافذة خصائص سطح المكتب
+function maximizeWindow(pageId) {
+    const win = document.getElementById(`window-${pageId}`);
+    if (win) {
+        if (win.style.width === '100%') {
+            win.style.width = '600px'; win.style.height = '450px';
+            win.style.left = '100px'; win.style.top = '100px';
+        } else {
+            win.style.width = '100%'; win.style.height = 'calc(100vh - 40px)';
+            win.style.left = '0'; win.style.top = '0';
+        }
+    }
+}
+
 function openDesktopProperties() {
     const modal = document.getElementById('desktopPropertiesModal');
-    if (modal) { modal.style.display = 'flex'; initWallpaperPresets(); }
+    if (modal) { modal.style.display = 'flex'; if (typeof initWallpaperPresets === 'function') initWallpaperPresets(); }
 }
+
 function closeDesktopProperties() {
     const modal = document.getElementById('desktopPropertiesModal');
     if (modal) modal.style.display = 'none';
 }
+
 function applyDesktopProperties() {
-    triggerAlert('✅ تم تطبيق إعدادات سطح المكتب');
+    triggerAlert('✅ ' + _('wallpaper.applied', 'تم تطبيق إعدادات سطح المكتب'));
     closeDesktopProperties();
 }
 
-console.log('✅ Windows Manager loaded');
+console.log('✅ Windows Manager loaded (i18n Ready)');
